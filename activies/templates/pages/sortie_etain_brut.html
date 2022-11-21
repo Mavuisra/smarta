@@ -1,0 +1,104 @@
+{% extends 'pages/base.html' %}
+  <!-- ======= Header ======= -->
+
+
+  <!-- ======= Sidebar ======= -->
+<!-- End Sidebar-->
+
+
+
+  <!-- ======= Footer ======= -->
+  
+{% block index %}
+
+
+
+<span>
+  <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">
+   vendre un produit
+ </button>
+ <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">
+   ajouter un client
+ </button>
+</span>
+
+
+ 
+<div class="modal-dialog modal-dialog-scrollable">
+ <div class="modal-content">
+   <div class="modal-header">
+     <h2 class="modal-title">Sortir l'Etain brut en four</h2>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+   </div>
+   <div class="modal-body">
+     <div class="card">
+       <div class="card-body">
+         <h5 class="card-title">la fondrerie</h4>
+
+         <!-- General Form Elements -->
+         <form method="post" action="updaterecord/{{ g.id }}">
+           {% csrf_token %}
+           
+           <div class="row mb-3">
+             <label class="col-sm-3 col-form-label">produit</label>
+             <div class="col-sm-9">
+               <select  class="form-select" name="produit" aria-label="Default select example">
+         
+                 <option value="">{{g.produits.nomProdui}}</option>
+
+               </select>
+             </div>
+           </div>
+           <div class="row mb-3">
+             <label class="col-sm-3 col-form-label">Four</label>
+             <div class="col-sm-9">
+               <select  class="form-select" name="four" aria-label="Default select example">
+                 
+                 
+                 <option  value="">{{ g.fourcasterie.libelle }}</option>
+                 
+                 
+               </select>
+             </div>
+           </div>
+           <div class="row mb-3">
+             <label for="inputNumber" class="col-sm-3 col-form-label">quantité entree/Kg</label>
+             <div class="col-sm-9">
+               <input disabled type="number" name="quantite" class="form-control" value="{{ g.quantite_entrer }}">
+             </div>
+           </div>
+           <div class="row mb-3">
+            <label for="inputNumber" class="col-sm-3 col-form-label">quantité sortie/Kg</label>
+            <div class="col-sm-9">
+              <input type="number" name="quantite_out" class="form-control" value="{{ g.quantite_out }}">
+            </div>
+          </div>
+   
+           <div class="row mb-3">
+             <label class="col-sm-6 col-form-label">Teneur Moyenne</label>
+             <div class="col-sm-6">
+               <input type="number" name = "teneur" class="form-control" value="{{ g.teneur_entrer }}" >
+             </div>
+           </div>
+
+           <div class="row mb-3">
+             <label class="col-sm-2 col-form-label"></label>
+             <div class="col-sm-10">
+               <button type="submit" class="btn btn-primary">sortir</button>
+             </div>
+           </div>
+
+         </form><!-- End General Form Elements -->
+
+       </div>
+     </div>
+   </div>
+   <div class="modal-footer">
+     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
+     
+   </div>
+ </div>
+</div>
+</div><!-- End Scrolling Modal-->
+
+{% endblock  %}
