@@ -10,7 +10,10 @@ client = clients.objects.all().values()
 fournisseur = fournisseurs.objects.all().values()
 
 moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
+moyenne_teneurs = round(moyenne_teneur, 2)
 moyenne_teneur_etain = refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg']
+moyenne_teneur_etains = round(moyenne_teneur_etain, 2)
+
 
 
 def nav(request):
@@ -23,21 +26,61 @@ def nav(request):
     sango = ''
     en_stock = summe_casterie_achaters - summe_casterie_vendus
     if en_stock == 10:
-        sango = 'la quantité en stock de la  casterie est de {} Kg cela ne suffit pas pour effectuer la vente !!'.format(en_stock)
         alet =1
     context = {
-        'alet':alet1,
-        'sango':sango,
+        'alet':1,
+        'sango':50,
     }
 
 
     return render(request, 'pages/header.html',context)
 
 def index(request):
+    summe_casterie_vendu = sorties.objects.all().filter(produits__id = 1)
+    summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
+
+    summe_casterie_transformer = smelting.objects.all().filter(produits__id = 1)
+    summe_casterie_transformers = summe_casterie_transformer.aggregate(Sum('quantite_entrer'))['quantite_entrer__sum']
+ 
+    summe_casterie_achater = entrees.objects.all().filter(produits__id = 1)
+    summe_casterie_achaters = summe_casterie_achater.aggregate(Sum('quantite'))['quantite__sum']
+    
+    en_stocks_casterie = summe_casterie_achaters - (summe_casterie_vendus + summe_casterie_transformers)
+
+    summe_etain_transformer = refinering.objects.all().filter(produits__id = 3)
+    summe_etain_transformers = summe_etain_transformer.aggregate(Sum('quantite_sortie'))['quantite_sortie__sum']
+
+    summe_etain_vendu = sorties.objects.all().filter(produits__id = 3)
+    summe_etain_vendus = summe_etain_vendu.aggregate(Sum('quantite'))['quantite__sum']
+    en_stocks_etain= summe_etain_transformers - (summe_etain_vendus)
+
+    revenu_etain = sorties.objects.all().filter(produits__id = 3)
+    revenu_etains = revenu_etain.aggregate(Sum('prix_total'))['prix_total__sum'] 
+    sango = 'la quantité en stock de la  casterie est de {} Kg cela ne suffit pas pour effectuer la vente !!'.format(3)
+
+    revenu_casterie = sorties.objects.all().filter(produits__id = 1)
+    revenu_casteries = revenu_casterie.aggregate(Sum('prix_total'))['prix_total__sum']
+    context = {
+        
+        'en_stocks':en_stocks_casterie,
+        'en_stocks_etain':en_stocks_etain,
+        'moyenne_teneur':moyenne_teneurs,
+        'moyenne_teneur_etain':moyenne_teneur_etains,
+        'revenu_etains':revenu_etains,
+        'revenu_casteries':revenu_casteries,
+        'alet':1,
+        'sango':sango,
+        
+    }
     
 
 
-    return render(request, 'pages/index.html')
+    return render(request, 'pages/index.html',context)
+def main(request):
+    
+
+
+    return render(request, 'pages/main.html')
     
 def sortie_etain_brut(request, id):
     g = smelting.objects.get(id=id)
@@ -134,14 +177,18 @@ def vente(request):
     summe_casterie_vendu = sorties.objects.all().filter(produits__id = 1)
     summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
 
+    summe_casterie_transformer = smelting.objects.all().filter(produits__id = 1)
+    summe_casterie_transformers = summe_casterie_transformer.aggregate(Sum('quantite_entrer'))['quantite_entrer__sum']
+    
+
     summe_casterie_achater = entrees.objects.all().filter(produits__id = 1)
     summe_casterie_achaters = summe_casterie_achater.aggregate(Sum('quantite'))['quantite__sum']
 
-    en_stocks = summe_casterie_achaters - summe_casterie_vendus
+    en_stocks = summe_casterie_achaters - (summe_casterie_vendus + summe_casterie_transformers)
     
-    if ((summe_casterie_achaters  != None) or ( summe_casterie_vendus != None)) and (summe_casterie_achaters > summe_casterie_vendus):
+    if ((summe_casterie_achaters  != None) or ( summe_casterie_vendus != None)) and (summe_casterie_achaters > (summe_casterie_vendus + summe_casterie_transformers)):
 
-        en_stocks = summe_casterie_achaters - summe_casterie_vendus
+        en_stocks = summe_casterie_achaters - (summe_casterie_vendus + summe_casterie_transformers)
         
         
         if request.method == 'POST':

@@ -32,7 +32,7 @@ class sorties(models.Model):
     produits = models.ForeignKey("produits", on_delete = models.CASCADE, related_name = 'produit')
     prix_vente = models.DecimalField(max_digits = 8, decimal_places = 2)
     quantite = models.FloatField()
-    teneur = models.FloatField()
+    teneur = models.DecimalField(max_digits = 8, decimal_places = 2)
     tvaPourcentage = models.FloatField(default= '0.0')
     date_sortie  =  models.DateTimeField(auto_now = True)
     prix_total = models.DecimalField(max_digits = 8, decimal_places = 2, default = 0.0)
@@ -43,7 +43,7 @@ class entrees(models.Model):
     produits = models.ForeignKey("produits", on_delete = models.CASCADE)
     prix_achat = models.FloatField()
     quantite = models.FloatField()
-    teneur = models.FloatField()
+    teneur = models.DecimalField(max_digits = 8, decimal_places = 2)
     numero_tag = models.CharField(max_length = 20)
     tvaPourcentage = models.FloatField(max_length = 20, default = 0.0)
     date_sortie  =  models.DateTimeField(auto_now = True)
@@ -59,7 +59,7 @@ class smelting(models.Model):
     fourcasterie = models.ForeignKey("fourcasterie", on_delete = models.CASCADE)
     quantite_entrer = models.FloatField(null = True, default = 0.0, blank = True)
     quantite_out = models.FloatField(null = True, default = 0.0, blank = True)
-    teneur_entrer = models.FloatField()
+    teneur_entrer = models.DecimalField(max_digits = 8, decimal_places = 2)
     date_entrer =  models.DateTimeField(auto_now = True)
     entrants = models.FloatField(null = True, default = 0.0, blank = True)
 class refinering(models.Model):
@@ -67,7 +67,7 @@ class refinering(models.Model):
     fourrafine = models.ForeignKey("fourrafine", on_delete = models.CASCADE)
     quantite_entree = models.FloatField(null = True, default = 0.0, blank = True)
     quantite_sortie = models.FloatField(null = True, default = 0.0, blank = True)
-    teneur_sortie = models.FloatField(null = True)
+    teneur_sortie = models.DecimalField(max_digits = 8, decimal_places = 2)
     date_sortie  =  models.DateTimeField(auto_now = True)
     entrants = models.FloatField(null = True, default = 0.0, blank = True);
 
