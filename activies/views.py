@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.urls import reverse
-from .models import clients, entrees,sorties, produits, clients, smelting, fourcasterie, refinering, fourrafine,stock
+from .models import clients, entrees,sorties, produits, clients, smelting, fourcasterie, refinering, fourrafine,stock,fournisseurs
 from django.db.models import Sum, Avg, Count
 # Create your views here.
 
 produit = produits.objects.all().values()
 client = clients.objects.all().values()
+fournisseur = fournisseurs.objects.all().values()
 
 moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
 moyenne_teneur_etain = refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg']
@@ -160,19 +161,26 @@ def vente(request):
                     pt = float(quantite) * float(prix_de_vente)
                 else:
                     pass
-                if int(produitt) == 1:
-                    vente = sorties(clients = client_id, produits = produit_id, prix_vente = prix_de_vente, quantite = quantite, teneur = moyenne_teneur,prix_total = pt)
-                    vente.save()
-                    url = reverse('vente')
-                    ret = HttpResponseRedirect(url)
-                    return ret
+                if int(produitt) == 1 and float(quantite) > en_stocks:
+                    if float(quantite) < en_stocks:
+
+                        vente = sorties(clients = client_id, produits = produit_id, prix_vente = prix_de_vente, quantite = quantite, teneur = moyenne_teneur,prix_total = pt)
+                        vente.save()
+                        url = reverse('vente')
+                        ret = HttpResponseRedirect(url)
+                        return ret
+                    else:
+                        pass
                 
                 else:
-                    
-                    vente = sorties(clients = client_id, produits = produit_id, prix_vente = prix_de_vente, quantite = quantite, teneur =moyenne_teneur_etain ,prix_total = pt)
-                    vente.save()
-                    url = reverse('vente')
-                    ret = HttpResponseRedirect(url)
+                    if float(quantite) < en_stocks:
+
+                        vente = sorties(clients = client_id, produits = produit_id, prix_vente = prix_de_vente, quantite = quantite, teneur =moyenne_teneur_etain ,prix_total = pt)
+                        vente.save()
+                        url = reverse('vente')
+                        ret = HttpResponseRedirect(url)
+                    else:
+                        pass
             else:
                 sangos = 'la quantité en stock de la  casterie est de {} Kg cela ne suffit pas pour effectuer la vente !!'.format(en_stocks)
                 alets =1
@@ -201,7 +209,60 @@ def vente(request):
 
 def achat(request):
     entres = entrees.objects.select_related('fournisseurs','produits')
+    total_general = entrees.objects.aggregate(Sum('prix_total'))['prix_total__sum']
+    total_prix_vente = entrees.objects.aggregate(Sum('prix_achat'))['prix_achat__sum']
+    total_quantite = entrees.objects.aggregate(Sum('quantite'))['quantite__sum']
+    summe_casterie_vendu = entrees.objects.all().filter(produits__id = 1)
+    summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
+
+    summe_casterie_achater = entrees.objects.all().filter(produits__id = 1)
+    summe_casterie_achaters = summe_casterie_achater.aggregate(Sum('quantite'))['quantite__sum']
+
+    
+        
+        
+    if request.method == 'POST':
+        
+        produitt = request.POST['produit']
+        fourcasteriess = request.POST['client']
+        produit_id = produits.objects.get(id = int(produitt))
+        fourcasteriess_id = fournisseurs.objects.get(id = int(fourcasteriess))
+        quantite = request.POST['quantite']
+        prix_achatq = request.POST['prix_achat']
+        tagss = request.POST['tag']
+        teneur = request.POST['teneur']
+        teneur_casterie = moyenne_teneur
+        teneur_etain = moyenne_teneur_etain
+        
+        
+            
+        if quantite != '' and prix_achatq != '':
+            pt = float(quantite) * float(prix_achatq)
+        else:
+            pass
+
+            
+
+        achatss = entrees( fournisseurs = fourcasteriess_id, produits = produit_id, prix_achat = prix_achatq , quantite = quantite, teneur = teneur ,numero_tag = tagss ,prix_total = pt)
+        achatss.save()
+        url = reverse('achat')
+        ret = HttpResponseRedirect(url)
+        return ret
+           
+            
+       
+      
     context = {
+        
+        'produit': produit,
+        'fournisseur': fournisseur,
+        'moyenne_teneur': moyenne_teneur,
+        'total_general':total_general,
+        'total_prix_vente':total_prix_vente,
+        'total_quantite':total_quantite,
+        'moyenne_teneur_etain':moyenne_teneur_etain,
+        'summe_casterie_vendus':summe_casterie_vendus,
+        'summe_casterie_achaters':summe_casterie_achaters,
         
         'entres':entres,
         

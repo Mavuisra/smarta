@@ -45,7 +45,7 @@ class entrees(models.Model):
     quantite = models.FloatField()
     teneur = models.FloatField()
     numero_tag = models.CharField(max_length = 20)
-    tvaPourcentage = models.FloatField(max_length = 20)
+    tvaPourcentage = models.FloatField(max_length = 20, default = 0.0)
     date_sortie  =  models.DateTimeField(auto_now = True)
     prix_total = models.DecimalField(max_digits = 8, decimal_places = 2, default = 0.0)
     
@@ -61,7 +61,7 @@ class smelting(models.Model):
     quantite_out = models.FloatField(null = True, default = 0.0, blank = True)
     teneur_entrer = models.FloatField()
     date_entrer =  models.DateTimeField(auto_now = True)
-    entrants = models.FloatField(null = True, default = 0.0, blank = True);
+    entrants = models.FloatField(null = True, default = 0.0, blank = True)
 class refinering(models.Model):
     produits = models.ForeignKey("produits", on_delete = models.CASCADE )
     fourrafine = models.ForeignKey("fourrafine", on_delete = models.CASCADE)
