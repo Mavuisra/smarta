@@ -68,8 +68,6 @@ def index(request):
         'moyenne_teneur_etain':moyenne_teneur_etains,
         'revenu_etains':revenu_etains,
         'revenu_casteries':revenu_casteries,
-        'alet':1,
-        'sango':sango,
         
     }
     
