@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .models import clients, entrees,sorties, produits, clients, smelting, fourcasterie, refinering, fourrafine,stock,fournisseurs
+from .models import clients, entrees,sorties, produits, clients, smelting, fourcasterie, refinering, fourrafine,fournisseurs
 from django.db.models import Sum, Avg, Count
 from django.db.models.functions import TruncMonth
 from django.forms import inlineformset_factory
-from django.contrib.auth.forms import UserCreationForm
+
 
 # Create your views here.
 
