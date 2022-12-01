@@ -66,11 +66,11 @@ def index(request):
 
     
 def sortie_etain_brut(request, id):
-    g = smelting.objects.get(id=id)
+    gg = smelting.objects.get(id=id)
     moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
     moyenne_teneurs = round(moyenne_teneur, 2)
     context = {
-        'g': g,
+        'g': gg,
         'moyenne_teneur': moyenne_teneurs,
     }
 
