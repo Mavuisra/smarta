@@ -270,7 +270,7 @@
                           </div>
                           <div class="ps-3">
                             
-                            <h6>145</h6>
+                            <h6> {{en_four}} </h6>
                             
       
                           </div>
@@ -318,12 +318,15 @@
                     {% endif %}
                     
                     <td>{{ i.fourcasterie.libelle }}</td>
-                    
-                    <td>{{i.quantite_entrer }}</td>
-                    {% if i.quantite_out == 0.0 %}
-                    <td style="color: red;"><a class=" text-danger bold " href="../sortir/{{ i.id }}">en four <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></a>  </td>
+                    {% if i.quantite_entrer != 0.0 %}
+                    <td style="color: red;"><a class=" text-danger bold " href="../sortir/{{ i.id }}">{{i.quantite_entrer }} en four<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></a>  </td>
                     {% else %}
-                    <td >{{i.quantite_out }}</td>
+                    <td>{{i.quantite_entrer }} kg restante</td>
+                    {% endif %}
+                    {% if i.quantite_out == 0.0 %}
+                    <td >pas de sortie</td>
+                    {% else %}
+                    <td>{{i.quantite_out }} kg etain brut</td>
                     {% endif %}
                     <td>{{ i.teneur_entrer }}</td>
                     <td>{{ i.entrants }}</td>
@@ -375,13 +378,13 @@
                     <div class="modal-dialog modal-dialog-scrollable">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title">enregistrer un vente</h5>
+                          <h5 class="modal-title">rafinage</h5>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                           <div class="card">
                             <div class="card-body">
-                              <h5 class="card-title">formulaire de vente </h5>
+                              <h5 class="card-title">Rafiner ici </h5>
                 
                               <!-- General Form Elements -->
                               <form method="post" action="">
@@ -423,7 +426,7 @@
                                 <div class="row mb-3">
                                   <label class="col-sm-6 col-form-label">Teneur Moyenne</label>
                                   <div class="col-sm-6">
-                                    <input type="number" name = "teneur" class="form-control" value="{{moyenne_teneur}}" disabled>
+                                    <input type="number" name = "teneur" class="form-control" value="{{moyenne_teneur_etains}}" disabled>
                                   </div>
                                 </div>
                                 <div class="row mb-3">
@@ -638,11 +641,10 @@
                             <td>{{ i.fourrafine.libelle }}</td>
                             
                             <td>{{i.quantite_entree }}</td>
-                            {% if i.quantite_sortie == 0.0 %}
-                            <td style="color: red;" ><a class=" text-danger bold " href="../sortir_etain/{{ i.id }}">en four</a> <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></td>
-                            {% else %}
+                            
+                            
                             <td ><a class=" text-danger bold " role = "status" href="../sortir_etain/{{ i.id }}">{{i.quantite_sortie }}</a></td>
-                            {% endif %}
+                          
                             {% if i.teneur_sortie == 0.0 %}
                             <td>en cours...</td>
                             {% else %}
@@ -676,10 +678,9 @@
                 </div>
               </div>
             </section>
-            <button onclick="myfun('pt')" class="btn btn-primary mt-3">Get Bill</button>
+            <button onclick="myfun('p')" class="btn btn-primary mt-3">Get Bill</button>
           </div>
           <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
-            Saepe animi et soluta ad odit soluta sunt. Nihil quos omnis animi debitis cumque. Accusantium quibusdam perspiciatis qui qui omnis magnam. Officiis accusamus impedit molestias nostrum veniam. Qui amet ipsum iure. Dignissimos fuga tempore dolor.
           </div>
         </div><!-- End Bordered Tabs -->
 
@@ -702,6 +703,7 @@
     }
 
 </script>
+
 
 
 {% endblock  %}

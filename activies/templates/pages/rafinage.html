@@ -1,112 +1,59 @@
 {% extends 'pages/base.html' %}
-  <!-- ======= Header ======= -->
 
 
-  <!-- ======= Sidebar ======= -->
-<!-- End Sidebar-->
-
-
-
-  <!-- ======= Footer ======= -->
-  
 {% block index %}
-
 
 <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Data Tables</h1>
+      <h1> {{sraf}} </h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href=" ">Home</a></li>
           <li class="breadcrumb-item">Tables</li>
-          <li class="breadcrumb-item active">Data</li>
+          <li class="breadcrumb-item active">transformation</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Bordered Tabs</h5>
+        <h5 class="card-title"></h5>
 
         <!-- Bordered Tabs -->
         <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-home" type="button" role="tab" aria-controls="home" aria-selected="true">vente de la casterie</button>
+         
+          <li class="nav-item  " role="presentation">
+            <button class="nav-link " id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-profile" type="button" role="tab" aria-controls="profile" aria-selected="true">rafinage</button>
           </li>
-     
          
         </ul>
         <div class="tab-content pt-2" id="borderedTabContent">
-          <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
-            <section class="section">
+         
+          <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
+            
+            <section class="section" >
               <div class="row">
                 <div class="col-lg-12">
                   
                   <span>
-                       <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">
-                        vendre un produit
-                         
-                      </button>
-                      <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#disabledAnimation">
-                        ajouter un client
+                      
+                      <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#largeModal">
+                          <h4> + Rafiner</h4>
                       </button>
                   </span>
-                  <div class="modal" id="disabledAnimation" tabindex="-1">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">Enregistrer un client</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <form class="row g-3">
-                            <div class="col-md-4">
-                              <label for="validationDefault01" class="form-label">Nom client</label>
-                              <input type="text" class="form-control" name = "first" id="validationDefault01" value="John" required>
-                            </div>
-                            <div class="col-md-4">
-                              <label for="validationDefault02" class="form-label">Post nom client</label>
-                              <input type="text" class="form-control" name = "last" id="validationDefault02" value="Doe" required>
-                            </div>
-                            
-                            <div class="col-md-6">
-                              <label for="validationDefault03" class="form-label">ville</label>
-                              <input type="text" class="form-control" name="ville" id="validationDefault03" required>
-                            </div>
-                            <div class="col-md-3">
-                              <label for="validationDefault04" class="form-label"></label>
-                              <select class="form-select" name = "sexe" id="validationDefault04" required>
-                                <option selected disabled value="">Sexe</option>
-                                <option>homme</option>
-                                <option>femme</option>
-                              </select>
-                            </div>
-                            
-                            
-                            <div class="col-12">
-                              <button class="btn btn-primary" type="submit">+creer</button>
-                            </div>
-                          </form>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
-                          
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                   
-                  <div class="modal fade" id="modalDialogScrollable" tabindex="-1">
+                  
+                  <div class="modal fade" id="largeModal" tabindex="-1">
                     <div class="modal-dialog modal-dialog-scrollable">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title">enregistrer un vente</h5>
+                          <h5 class="modal-title">rafinage</h5>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                           <div class="card">
                             <div class="card-body">
-                              <h5 class="card-title">formulaire de vente </h5>
+                              <h5 class="card-title">Rafiner ici </h5>
                 
                               <!-- General Form Elements -->
                               <form method="post" action="">
@@ -117,7 +64,7 @@
                                   <div class="col-sm-9">
                                     <select class="form-select" name="produit" aria-label="Default select example">
                                     {% for i in produit %}
-                                      {% if i.nomProdui != 'etain' and i.nomProdui != 'casterie' %}
+                                      {% if i.nomProdui != 'etainbrut' %}
                                       {% comment %}
                                       <option value="{{i.id}}">{{ i.nomProdui}}</option>
                                       {% endcomment %}
@@ -129,35 +76,36 @@
                                   </div>
                                 </div>
                                 <div class="row mb-3">
-                                  <label class="col-sm-3 col-form-label">client</label>
+                                  <label class="col-sm-3 col-form-label">Four</label>
                                   <div class="col-sm-9">
-                                    <select class="form-select" name="client" aria-label="Default select example">
+                                    <select class="form-select" name="Four" aria-label="Default select example">
                                       
-                                      {% for i in client %}
-                                      <option value="{{ i.id}}">{{ i.nom_clients}}</option>
+                                      {% for i in fourrafines %}
+                                      <option value="{{i.id}}">{{i.libelle}}</option>
                                       {% endfor %}
                                     </select>
                                   </div>
                                 </div>
                                 <div class="row mb-3">
-                                  <label for="inputNumber" class="col-sm-3 col-form-label">quantité/Kg</label>
+                                  <label for="inputNumber" class="col-sm-3 col-form-label">quantité entrée/Kg</label>
                                   <div class="col-sm-9">
                                     <input type="number" name="quantite" class="form-control">
                                   </div>
                                 </div>
                                 <div class="row mb-3">
-                                  <label for="inputNumber" class="col-sm-4 col-form-label">Prix de vente</label>
+                                  <label class="col-sm-6 col-form-label">Teneur Moyenne</label>
+                                  <div class="col-sm-6">
+                                    <input type="number" name = "teneur" class="form-control" value="{{moyenne_teneur}}" disabled>
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <label for="inputNumber" class="col-sm-4 col-form-label">entrants</label>
                                   <div class="col-sm-8">
-                                    <input type="number" name="prix_vente" class="form-control">
+                                    <input type="number" name="entrants" class="form-control">
                                   </div>
                                 </div>
                                 
-                                <div class="row mb-3">
-                                  <label class="col-sm-6 col-form-label">Teneur Moyenne</label>
-                                  <div class="col-sm-6">
-                                    <input type="number" name = "teneur" class="form-control" value="{{ moyenne_teneur }}" disabled>
-                                  </div>
-                                </div>
+                                
                 
                                 <div class="row mb-3">
                                   <label class="col-sm-2 col-form-label"></label>
@@ -178,8 +126,8 @@
                       </div>
                     </div>
                   </div><!-- End Scrolling Modal-->
-          
-                  <div class="card">
+        
+                  <div class="card " >
                     <div class="card-body ">
                       
                       
@@ -210,7 +158,7 @@
                                   </div>
                                   <div class="ps-3">
                                     
-                                    <h6>{{sangos}}</h6>
+                                    <h6>145</h6>
                                     
               
                                   </div>
@@ -328,35 +276,50 @@
                       <h5 class="card-title"> </h5>
                      
                      
-                      
+                      <div id = "pt">
                       <!-- Table with stripped rows -->
-                      <div id="pt">
-                      <table class="table datatable">
+                      <table class="table datatable" >
+                        
+        
+                        
                         <thead>
                           <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Clients</th>
                             <th scope="col">produit</th>
-                            <th scope="col">Prix de vente</th>
-                            <th scope="col">quantité</th>
-                            <th scope="col">Prix total</th>
-                            <th scope="col">teneur</th>
-                            <th scope="col">date sortie</th>
+                            <th scope="col">Four </th>
+                            <th scope="col">quantite entrée</th>
+                            <th scope="col">quantite sortie</th>
+                            <th scope="col">teneur </th>
+                            <th scope="col">entrants</th>
+                            <th scope="col">date</th>
+                            
                           </tr>
                         </thead>
                         <tbody>
-                            {% for i in sortie %}
+                            {% for i in rafinage %}
                           <tr>
                             
                             <th scope="row">{{ i.id }}</th>
-          
-                            <td>{{ i.clients.nom_clients }}</td>
+                            {% if i.quantite_sortie != 0.0 %}
                             <td>{{ i.produits.nomProdui }}</td>
-                            <td id="prixVente">{{i.prix_vente}}</td>
-          
-                            <td id="quantite">{{i.quantite }}</td>
-                            <td>{{i.prix_total }}</td>
-                            <td>{{ i.teneur }}</td>
+                            {% else %}
+                            
+                            <td>Etain brut</td>
+                            {% endif %}
+                            
+                            <td>{{ i.fourrafine.libelle }}</td>
+                            
+                            <td>{{i.quantite_entree }}</td>
+                            
+                            
+                            <td ><a class=" text-danger bold " role = "status" href="../sortir_etain/{{ i.id }}">{{i.quantite_sortie }}</a></td>
+                          
+                            {% if i.teneur_sortie == 0.0 %}
+                            <td>en cours...</td>
+                            {% else %}
+                            <td>{{ i.teneur_sortie }}</td>
+                            {% endif %}
+                            <td>{{ i.entrants }}</td>
                             <td>{{ i.date_sortie }}</td>
                           </tr>
                           {% endfor %}
@@ -367,8 +330,8 @@
                             <td></td>
                             <td></td>
                             <td>{{total_prix_vente}}</td>
+                            <td>{{total_quantite}}</td>
                             <td>{{total_general}}</td>
-                            <td>{{prix_total}}</td>
                             <td></td>
                             <td></td>
                           </tr>
@@ -377,20 +340,18 @@
                       </table>
                     </div>
                       <!-- End Table with stripped rows -->
-              <button onclick="myfun('pt')" class="btn btn-primary mt-3">generer un rapport</button>
+                      
                     </div>
                   </div>
-          
+        
                 </div>
               </div>
             </section>
-          
-    
-
+            <button onclick="myfun('p')" class="btn btn-primary mt-3">Get Bill</button>
           </div>
-          
-     
-     
+          <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
+          </div>
+        </div><!-- End Bordered Tabs -->
 
       </div>
     </div>
@@ -402,7 +363,7 @@
 
   </main><!-- End #main -->
 
-<script type="text/javascript">
+  <script type="text/javascript">
     function myfun(pa){
     var bk = document.body.innerHTML;
     var dv = document.getElementById(pa).innerHTML;
@@ -410,9 +371,6 @@
         window.print();
     }
 
-
-  </script>
-
-
+</script>
 
 {% endblock  %}

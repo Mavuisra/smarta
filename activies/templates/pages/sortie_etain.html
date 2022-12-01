@@ -27,13 +27,13 @@
 <div class="modal-dialog modal-dialog-scrollable">
  <div class="modal-content">
    <div class="modal-header">
-     <h2 class="modal-title">Sortir l'Etain brut en four</h2>
+     <h2 class="modal-title">Sortir l'Etain </h2>
      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
    </div>
    <div class="modal-body">
      <div class="card">
        <div class="card-body">
-         <h5 class="card-title">la fondrerie</h4>
+         <h5 class="card-title"> rafinage</h4>
 
          <!-- General Form Elements -->
          <form method="post" action="updaterecord_bru/{{ g.id }}">
@@ -43,9 +43,15 @@
              <label class="col-sm-3 col-form-label">produit</label>
              <div class="col-sm-9">
                <select  class="form-select" name="produit" aria-label="Default select example">
-         
-                 <option value="{{g.produits.id}}">{{g.produits.nomProdui}}</option>
-
+                  {% for i in produit %}
+                  {% if i.nomProdui != 'etain' %}
+                  {% comment %}
+                  <option value="{{i.id}}">{{ i.nomProdui}}</option>
+                  {% endcomment %}
+                  {% else %}
+                  <option value="{{i.id}}">{{ i.nomProdui}}</option>
+                  {% endif %}
+                  {% endfor %}
                </select>
              </div>
            </div>
@@ -64,7 +70,7 @@
            <div class="row mb-3">
              <label for="inputNumber" class="col-sm-3 col-form-label">quantité entree/Kg</label>
              <div class="col-sm-9">
-               <input disabled type="number" name="quantite" class="form-control" value="{{ g.quantite_entree }}">
+               <input  type="number" name="quantite_entree" class="form-control" value="{{ g.quantite_entree }}">
              </div>
            </div>
            <div class="row mb-3">
@@ -77,7 +83,7 @@
            <div class="row mb-3">
              <label class="col-sm-6 col-form-label">Teneur Sortie</label>
              <div class="col-sm-6">
-               <input type="number" name = "teneur" class="form-control" value="{{ g.teneur_sortie }}" >
+               <input type="number" name = "teneur" class="form-control" value="" required>
              </div>
            </div>
 
