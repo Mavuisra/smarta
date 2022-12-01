@@ -63,11 +63,7 @@ def index(request):
 
 
     return render(request, 'pages/index.html',context)
-def main(request):
-    
 
-
-    return render(request, 'pages/main.html')
     
 def sortie_etain_brut(request, id):
     g = smelting.objects.get(id=id)
