@@ -64,7 +64,56 @@ def index(request):
 
     return render(request, 'pages/index.html',context)
 
+def rafinage(request):
+    moyenne_teneur_etain = refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg']
+    moyenne_teneur_etains = round(moyenne_teneur_etain, 2)
+    fourrafines = fourrafine.objects.all().values()
+    fourcasteries = fourcasterie.objects.all().values()
+    smeltings = smelting.objects.select_related('fourcasterie','produits')
+    rafinage = refinering.objects.select_related('fourrafine','produits')
+    moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
+    moyenne_teneurs = round(moyenne_teneur, 2)
     
+    summe_casterie_achater = entrees.objects.all().filter(produits__id = 1)
+    summe_casterie_achaters = summe_casterie_achater.aggregate(Sum('quantite'))['quantite__sum']
+    summe_casterie_four = smelting.objects.all().filter(produits__id = 1)
+    summe_casterie_fours = summe_casterie_four.aggregate(Sum('quantite_entrer'))['quantite_entrer__sum']
+    summe_casterie_vendu = sorties.objects.all().filter(produits__id = 1)
+    summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
+    en_four = summe_casterie_achaters - summe_casterie_fours
+
+    if ((summe_casterie_achaters  != None) or ( summe_casterie_vendus != None)) and (summe_casterie_achaters > (summe_casterie_vendus + summe_casterie_fours)):
+        en_four = summe_casterie_achaters - (summe_casterie_vendus + summe_casterie_fours)
+        if request.method == 'POST':
+            produitt = request.POST['produit']
+            fourcasteriess = request.POST['Four']
+            produit_id = produits.objects.get(id = int(produitt))
+            fourcasterie_id = fourcasterie.objects.get(id = int(fourcasteriess))
+            quantite_in = request.POST['quantite']
+            entrants = request.POST['entrants']
+            if en_four > float(quantite_in):
+
+                fondre = smelting(produits = produit_id, fourcasterie = fourcasterie_id, quantite_entrer = quantite_in, teneur_entrer = moyenne_teneurs, entrants = entrants)
+                fondre.save()
+                url = reverse('rafinage')
+                ret = HttpResponseRedirect(url)
+                return ret 
+    context = {
+        
+        'moyenne_teneur': moyenne_teneurs,
+        'smeltings': smeltings,
+        'fourcasteries': fourcasteries,
+        'produit': produit,
+        'fourrafines':fourrafines,
+        'rafinage':rafinage,
+        'moyenne_teneur_etains':moyenne_teneur_etains,
+        'en_four': en_four,
+        
+    }
+
+    return render(request, 'pages/rafinage.html',context)
+
+
 def sortie_etain_brut(request, id):
     gg = smelting.objects.get(id=id)
     moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
