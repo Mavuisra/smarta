@@ -71,36 +71,33 @@ def rafinage(request):
     fourcasteries = fourcasterie.objects.all().values()
     smeltings = smelting.objects.select_related('fourcasterie','produits')
     rafinage = refinering.objects.select_related('fourrafine','produits')
-    moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
-    moyenne_teneurs = round(moyenne_teneur, 2)
     
-    summe_casterie_achater = entrees.objects.all().filter(produits__id = 1)
-    summe_casterie_achaters = summe_casterie_achater.aggregate(Sum('quantite'))['quantite__sum']
-    summe_casterie_four = smelting.objects.all().filter(produits__id = 1)
-    summe_casterie_fours = summe_casterie_four.aggregate(Sum('quantite_entrer'))['quantite_entrer__sum']
-    summe_casterie_vendu = sorties.objects.all().filter(produits__id = 1)
-    summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
-    en_four = summe_casterie_achaters - summe_casterie_fours
+    summe_casterie_sortie_four = smelting.objects.all().filter(produits__id = 1)
+    summe_casterie_sortie_fours = summe_casterie_sortie_four.aggregate(Sum('quantite_out'))['quantite_out__sum']
+   
+    etain_entrain = refinering.objects.all().filter(produits__id = 3)
+    etain_entrains = etain_entrain.aggregate(Sum('quantite_entree'))['quantite_entree__sum']
+    en_four = summe_casterie_sortie_fours - etain_entrains
 
-    if ((summe_casterie_achaters  != None) or ( summe_casterie_vendus != None)) and (summe_casterie_achaters > (summe_casterie_vendus + summe_casterie_fours)):
-        en_four = summe_casterie_achaters - (summe_casterie_vendus + summe_casterie_fours)
+    if summe_casterie_sortie_fours > etain_entrains:
+        en_four = summe_casterie_sortie_fours - etain_entrains
         if request.method == 'POST':
             produitt = request.POST['produit']
             fourcasteriess = request.POST['Four']
             produit_id = produits.objects.get(id = int(produitt))
-            fourcasterie_id = fourcasterie.objects.get(id = int(fourcasteriess))
+            fourcasterie_id = fourrafine.objects.get(id = int(fourcasteriess))
             quantite_in = request.POST['quantite']
             entrants = request.POST['entrants']
             if en_four > float(quantite_in):
 
-                fondre = smelting(produits = produit_id, fourcasterie = fourcasterie_id, quantite_entrer = quantite_in, teneur_entrer = moyenne_teneurs, entrants = entrants)
+                fondre = refinering(produits = produit_id, fourrafine = fourcasterie_id, quantite_entree = quantite_in, teneur_entrer = moyenne_teneur_etains, entrants = entrants)
                 fondre.save()
                 url = reverse('rafinage')
                 ret = HttpResponseRedirect(url)
                 return ret 
     context = {
         
-        'moyenne_teneur': moyenne_teneurs,
+        'moyenne_teneur': moyenne_teneur_etains,
         'smeltings': smeltings,
         'fourcasteries': fourcasteries,
         'produit': produit,
