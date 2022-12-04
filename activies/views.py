@@ -90,7 +90,7 @@ def rafinage(request):
             entrants = request.POST['entrants']
             if en_four > float(quantite_in):
 
-                fondre = refinering(produits = produit_id, fourrafine = fourcasterie_id, quantite_entree = quantite_in, teneur_entrer = moyenne_teneur_etains, entrants = entrants)
+                fondre = refinering(produits = produit_id, fourrafine = fourcasterie_id, quantite_entree = quantite_in, teneur_sortie = moyenne_teneur_etains, entrants = entrants)
                 fondre.save()
                 url = reverse('rafinage')
                 ret = HttpResponseRedirect(url)
@@ -105,6 +105,7 @@ def rafinage(request):
         'rafinage':rafinage,
         'moyenne_teneur_etains':moyenne_teneur_etains,
         'en_four': en_four,
+        'summe_casterie_sortie_fours':summe_casterie_sortie_fours,
         
     }
 
