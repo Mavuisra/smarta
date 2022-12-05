@@ -1,0 +1,74 @@
+{% extends 'pages/base.html' %}
+  <!-- ======= Header ======= -->
+
+
+  <!-- ======= Sidebar ======= -->
+<!-- End Sidebar-->
+
+
+
+  <!-- ======= Footer ======= -->
+  
+{% block index %}
+
+
+<span>
+    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">
+     vendre un produit
+   </button>
+   <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">
+     ajouter un client
+   </button>
+  </span>
+  
+  
+   
+  <div class="modal-dialog modal-dialog-scrollable">
+   <div class="modal-content">
+     <div class="modal-header">
+       <h2 class="modal-title">Sortir l'Etain </h2>
+       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
+     <div class="modal-body">
+       <div class="card">
+         <div class="card-body">
+           <h5 class="card-title"> rafinage</h4>
+  
+           <!-- General Form Elements -->
+           <form class="row g-3" method="post" action="">
+            {% csrf_token %}
+            <div class="col-md-4">
+              <label for="" class="form-label">Nom client</label>
+              <input type="text" class="form-control" name = "first"   required>
+            </div>
+            <div class="col-md-4">
+              <label for="" class="form-label">Post nom client</label>
+              <input type="text" class="form-control" name = "last"  value="Doe" required>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="" class="form-label">ville</label>
+              <input type="text" class="form-control" name="ville"  required>
+            </div>
+            <div class="col-md-3">
+              <label for="" class="form-label"></label>
+              <select class="form-select" name = "sexe"  required>
+                <option selected disabled value="">Sexe</option>
+                <option>homme</option>
+                <option>femme</option>
+              </select>
+              <button type="submit" class="btn btn-primary">creer</button>
+            </div>
+          </form><!-- End General Form Elements -->
+  
+         </div>
+       </div>
+     </div>
+     <div class="modal-footer">
+       <button type="submit" class="btn btn-secondary mb-3" data-bs-dismiss="modal">X</button>
+       
+     </div>
+   </div>
+  </div>
+  </div><!-- End Scrolling Modal-->
+{% endblock  %}

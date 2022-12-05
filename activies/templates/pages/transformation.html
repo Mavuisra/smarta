@@ -33,13 +33,10 @@
           <li class="nav-item" role="presentation">
             <button class="nav-link " id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-home" type="button" role="tab" aria-controls="home" aria-selected="true">fondrerie</button>
           </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-profile" type="button" role="tab" aria-controls="profile" aria-selected="false">rafinage</button>
-          </li>
-         
+          
         </ul>
         <div class="tab-content pt-2" id="borderedTabContent">
-          <div class="tab-pane fade show " id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
+          <div class="tab-pane  " id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
               
     <section class="section" >
       <div class="row">
@@ -89,8 +86,8 @@
                           <label class="col-sm-3 col-form-label">Four</label>
                           <div class="col-sm-9">
                             <select class="form-select" name="Four" aria-label="Default select example">
-                              
                               {% for i in fourcasteries %}
+
                               <option value="{{i.id}}">{{i.libelle}}</option>
                               {% endfor %}
                             </select>
@@ -146,21 +143,9 @@
                   <div class="col-xxl-3 col-md-6 dashboard">
                     <div class="card info-card sales-card ">
       
-                      <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                          <li class="dropdown-header text-start">
-                            <h6>Filter</h6>
-                          </li>
-      
-                          <li><a class="dropdown-item" href="#">Today</a></li>
-                          <li><a class="dropdown-item" href="#">This Month</a></li>
-                          <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                      </div>
       
                       <div class="card-body">
-                        <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
+                        <h3 class="card-title"> teneur moyenne casterie<span></span></h3>
       
                         <div class="d-flex align-items-center">
                           <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -168,7 +153,47 @@
                           </div>
                           <div class="ps-3">
                             
-                            <h6>145</h6>
+                            <h6>{{ moyenne_teneur }} %</h6>
+                            
+      
+                          </div>
+                        </div>
+                      </div>
+      
+                    </div>
+                  </div>
+                  <div class="col-xxl-3 col-md-6 dashboard">
+                    <div class="card info-card sales-card ">
+                      <div class="card-body">
+                        <h3 class="card-title"> casterie en Four<span></span></h3>
+      
+                        <div class="d-flex align-items-center">
+                          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-cart"></i>
+                          </div>
+                          <div class="ps-3">
+                            
+                            <h6>{{ summe_casterie_fours }} kg</h6>
+                            
+      
+                          </div>
+                        </div>
+                      </div>
+      
+                    </div>
+                  </div>
+                  <div class="col-xxl-3 col-md-6 dashboard">
+                    <div class="card info-card sales-card ">
+                      <div class="card-body">
+                        <h3 class="card-title">etain brut sortie<span></span></h3>
+      
+                        <div class="d-flex align-items-center">
+                          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-cart"></i>
+                          </div>
+                          <div class="ps-3">
+                            
+                            <h6>{{ summe_etain_brut_fours }} kg</h6>
                             
       
                           </div>
@@ -180,21 +205,9 @@
                   <div class="col-xxl-3 col-md-6 dashboard">
                     <div class="card info-card sales-card ">
       
-                      <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                          <li class="dropdown-header text-start">
-                            <h6>Filter</h6>
-                          </li>
-      
-                          <li><a class="dropdown-item" href="#">Today</a></li>
-                          <li><a class="dropdown-item" href="#">This Month</a></li>
-                          <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                      </div>
-      
+         
                       <div class="card-body">
-                        <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
+                        <h1 class="card-title">stock casterie</h1>
       
                         <div class="d-flex align-items-center">
                           <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -202,75 +215,7 @@
                           </div>
                           <div class="ps-3">
                             
-                            <h6>145</h6>
-                            
-      
-                          </div>
-                        </div>
-                      </div>
-      
-                    </div>
-                  </div>
-                  <div class="col-xxl-3 col-md-6 dashboard">
-                    <div class="card info-card sales-card ">
-      
-                      <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                          <li class="dropdown-header text-start">
-                            <h6>Filter</h6>
-                          </li>
-      
-                          <li><a class="dropdown-item" href="#">Today</a></li>
-                          <li><a class="dropdown-item" href="#">This Month</a></li>
-                          <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                      </div>
-      
-                      <div class="card-body">
-                        <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
-      
-                        <div class="d-flex align-items-center">
-                          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                            <i class="bi bi-cart"></i>
-                          </div>
-                          <div class="ps-3">
-                            
-                            <h6>145</h6>
-                            
-      
-                          </div>
-                        </div>
-                      </div>
-      
-                    </div>
-                  </div>
-                  <div class="col-xxl-3 col-md-6 dashboard">
-                    <div class="card info-card sales-card ">
-      
-                      <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                          <li class="dropdown-header text-start">
-                            <h6>Filter</h6>
-                          </li>
-      
-                          <li><a class="dropdown-item" href="#">Today</a></li>
-                          <li><a class="dropdown-item" href="#">This Month</a></li>
-                          <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                      </div>
-      
-                      <div class="card-body">
-                        <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
-      
-                        <div class="d-flex align-items-center">
-                          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                            <i class="bi bi-cart"></i>
-                          </div>
-                          <div class="ps-3">
-                            
-                            <h6> {{en_four}} </h6>
+                            <h6> {{en_four}} kg</h6>
                             
       
                           </div>
@@ -359,335 +304,9 @@
     </section>
 <button onclick="myfun('pt')" class="btn btn-primary mt-3">Get Bill</button>
 
-          </div>
-          <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
-            
-            <section class="section" >
-              <div class="row">
-                <div class="col-lg-12">
-                  
-                  <span>
-                      
-                      <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#largeModal">
-                          <h4> + Rafiner</h4>
-                      </button>
-                  </span>
-                  
-                  
-                  <div class="modal fade" id="largeModal" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-scrollable">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">rafinage</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <div class="card">
-                            <div class="card-body">
-                              <h5 class="card-title">Rafiner ici </h5>
-                
-                              <!-- General Form Elements -->
-                              <form method="post" action="">
-                                {% csrf_token %}
-                                
-                                <div class="row mb-3">
-                                  <label class="col-sm-3 col-form-label">produit</label>
-                                  <div class="col-sm-9">
-                                    <select class="form-select" name="produit" aria-label="Default select example">
-                                    {% for i in produit %}
-                                      {% if i.nomProdui != 'etain brut' %}
-                                      {% comment %}
-                                      <option value="{{i.id}}">{{ i.nomProdui}}</option>
-                                      {% endcomment %}
-                                      {% else %}
-                                      <option value="{{i.id}}">{{ i.nomProdui}}</option>
-                                      {% endif %}
-                                      {% endfor %}
-                                    </select>
-                                  </div>
-                                </div>
-                                <div class="row mb-3">
-                                  <label class="col-sm-3 col-form-label">Four</label>
-                                  <div class="col-sm-9">
-                                    <select class="form-select" name="Four" aria-label="Default select example">
-                                      
-                                      {% for i in fourrafines %}
-                                      <option value="{{i.id}}">{{i.libelle}}</option>
-                                      {% endfor %}
-                                    </select>
-                                  </div>
-                                </div>
-                                <div class="row mb-3">
-                                  <label for="inputNumber" class="col-sm-3 col-form-label">quantité entrée/Kg</label>
-                                  <div class="col-sm-9">
-                                    <input type="number" name="quantite" class="form-control">
-                                  </div>
-                                </div>
-                                <div class="row mb-3">
-                                  <label class="col-sm-6 col-form-label">Teneur Moyenne</label>
-                                  <div class="col-sm-6">
-                                    <input type="number" name = "teneur" class="form-control" value="{{moyenne_teneur_etains}}" disabled>
-                                  </div>
-                                </div>
-                                <div class="row mb-3">
-                                  <label for="inputNumber" class="col-sm-4 col-form-label">entrants</label>
-                                  <div class="col-sm-8">
-                                    <input type="number" name="entrants" class="form-control">
-                                  </div>
-                                </div>
-                                
-                                
-                
-                                <div class="row mb-3">
-                                  <label class="col-sm-2 col-form-label"></label>
-                                  <div class="col-sm-10">
-                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                  </div>
-                                </div>
-                
-                              </form><!-- End General Form Elements -->
-                
-                            </div>
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
-                          
-                        </div>
-                      </div>
-                    </div>
-                  </div><!-- End Scrolling Modal-->
-        
-                  <div class="card " >
-                    <div class="card-body ">
-                      
-                      
-                        <div class="col-md-12">
-                          <div class="row">
-                          <div class="col-xxl-3 col-md-6 dashboard">
-                            <div class="card info-card sales-card ">
-              
-                              <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
-                                  </li>
-              
-                                  <li><a class="dropdown-item" href="#">Today</a></li>
-                                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                              </div>
-              
-                              <div class="card-body">
-                                <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
-              
-                                <div class="d-flex align-items-center">
-                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-cart"></i>
-                                  </div>
-                                  <div class="ps-3">
-                                    
-                                    <h6>145</h6>
-                                    
-              
-                                  </div>
-                                </div>
-                              </div>
-              
-                            </div>
-                          </div>
-                          <div class="col-xxl-3 col-md-6 dashboard">
-                            <div class="card info-card sales-card ">
-              
-                              <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
-                                  </li>
-              
-                                  <li><a class="dropdown-item" href="#">Today</a></li>
-                                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                              </div>
-              
-                              <div class="card-body">
-                                <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
-              
-                                <div class="d-flex align-items-center">
-                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-cart"></i>
-                                  </div>
-                                  <div class="ps-3">
-                                    
-                                    <h6>145</h6>
-                                    
-              
-                                  </div>
-                                </div>
-                              </div>
-              
-                            </div>
-                          </div>
-                          <div class="col-xxl-3 col-md-6 dashboard">
-                            <div class="card info-card sales-card ">
-              
-                              <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
-                                  </li>
-              
-                                  <li><a class="dropdown-item" href="#">Today</a></li>
-                                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                              </div>
-              
-                              <div class="card-body">
-                                <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
-              
-                                <div class="d-flex align-items-center">
-                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-cart"></i>
-                                  </div>
-                                  <div class="ps-3">
-                                    
-                                    <h6>145</h6>
-                                    
-              
-                                  </div>
-                                </div>
-                              </div>
-              
-                            </div>
-                          </div>
-                          <div class="col-xxl-3 col-md-6 dashboard">
-                            <div class="card info-card sales-card ">
-              
-                              <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
-                                  </li>
-              
-                                  <li><a class="dropdown-item" href="#">Today</a></li>
-                                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                              </div>
-              
-                              <div class="card-body">
-                                <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
-              
-                                <div class="d-flex align-items-center">
-                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-cart"></i>
-                                  </div>
-                                  <div class="ps-3">
-                                    
-                                    <h6>145</h6>
-                                    
-              
-                                  </div>
-                                </div>
-                              </div>
-              
-                            </div>
-                          </div>
-                          
-                        </div>
-                      </div>
-                      
-                      <h5 class="card-title"> </h5>
-                     
-                     
-                      <div id = "pt">
-                      <!-- Table with stripped rows -->
-                      <table class="table datatable" >
-                        
-        
-                        
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">produit</th>
-                            <th scope="col">Four </th>
-                            <th scope="col">quantite entrée</th>
-                            <th scope="col">quantite sortie</th>
-                            <th scope="col">teneur sortie</th>
-                            <th scope="col">entrants</th>
-                            <th scope="col">date</th>
-                            
-                          </tr>
-                        </thead>
-                        <tbody>
-                            {% for i in rafinage %}
-                          <tr>
-                            
-                            <th scope="row">{{ i.id }}</th>
-                            {% if i.quantite_sortie != 0.0 %}
-                            <td>{{ i.produits.nomProdui }}</td>
-                            {% else %}
-                            
-                            <td>Etain brut</td>
-                            {% endif %}
-                            
-                            <td>{{ i.fourrafine.libelle }}</td>
-                            
-                            <td>{{i.quantite_entree }}</td>
-                            
-                            
-                            <td ><a class=" text-danger bold " role = "status" href="../sortir_etain/{{ i.id }}">{{i.quantite_sortie }}</a></td>
-                          
-                            {% if i.teneur_sortie == 0.0 %}
-                            <td>en cours...</td>
-                            {% else %}
-                            <td>{{ i.teneur_sortie }}</td>
-                            {% endif %}
-                            <td>{{ i.entrants }}</td>
-                            <td>{{ i.date_sortie }}</td>
-                          </tr>
-                          {% endfor %}
-                        </tbody>
-                        <tbody>
-                          <tr>
-                            <th scope="row">Total general</th>
-                            <td></td>
-                            <td></td>
-                            <td>{{total_prix_vente}}</td>
-                            <td>{{total_quantite}}</td>
-                            <td>{{total_general}}</td>
-                            <td></td>
-                            <td></td>
-                          </tr>
-                          
-                        </tbody>
-                      </table>
-                    </div>
+          
                       <!-- End Table with stripped rows -->
-                      
-                    </div>
-                  </div>
-        
-                </div>
-              </div>
-            </section>
-            <button onclick="myfun('p')" class="btn btn-primary mt-3">Get Bill</button>
-          </div>
-          <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
-          </div>
-        </div><!-- End Bordered Tabs -->
-
-      </div>
-    </div>
-
-
+          
 
 
 

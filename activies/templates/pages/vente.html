@@ -48,40 +48,10 @@
                          
                       </button>
                       <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#disabledAnimation">
-                        ajouter un client
+                       <a href="../ajouterClient">ajouter un client</a> 
                       </button>
                   </span>
-                  <div class="modal" id="disabledAnimation" tabindex="-1">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">Enregistrer un client</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <form class="row g-3">
-                            <div class="col-md-4">
-                              <label for="validationDefault01" class="form-label">Nom client</label>
-                              <input type="text" class="form-control" name = "first" id="validationDefault01" value="John" required>
-                            </div>
-                            <div class="col-md-4">
-                              <label for="validationDefault02" class="form-label">Post nom client</label>
-                              <input type="text" class="form-control" name = "last" id="validationDefault02" value="Doe" required>
-                            </div>
-                            
-                            <div class="col-md-6">
-                              <label for="validationDefault03" class="form-label">ville</label>
-                              <input type="text" class="form-control" name="ville" id="validationDefault03" required>
-                            </div>
-                            <div class="col-md-3">
-                              <label for="validationDefault04" class="form-label"></label>
-                              <select class="form-select" name = "sexe" id="validationDefault04" required>
-                                <option selected disabled value="">Sexe</option>
-                                <option>homme</option>
-                                <option>femme</option>
-                              </select>
-                            </div>
-                            
+                  
                             
                             <div class="col-12">
                               <button class="btn btn-primary" type="submit">+creer</button>
@@ -188,21 +158,10 @@
                           <div class="col-xxl-3 col-md-6 dashboard">
                             <div class="card info-card sales-card ">
               
-                              <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
-                                  </li>
-              
-                                  <li><a class="dropdown-item" href="#">Today</a></li>
-                                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                              </div>
+                             
               
                               <div class="card-body">
-                                <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
+                                <h5 class="card-title">casterie achater</h5>
               
                                 <div class="d-flex align-items-center">
                                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -210,7 +169,7 @@
                                   </div>
                                   <div class="ps-3">
                                     
-                                    <h6>{{sangos}}</h6>
+                                    <h6>{{summe_casterie_achaters}}kg </h6>
                                     
               
                                   </div>
@@ -222,21 +181,10 @@
                           <div class="col-xxl-3 col-md-6 dashboard">
                             <div class="card info-card sales-card ">
               
-                              <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
-                                  </li>
-              
-                                  <li><a class="dropdown-item" href="#">Today</a></li>
-                                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                              </div>
+                            
               
                               <div class="card-body">
-                                <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
+                                <h5 class="card-title">casterie vendues</h5>
               
                                 <div class="d-flex align-items-center">
                                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -244,7 +192,7 @@
                                   </div>
                                   <div class="ps-3">
                                     
-                                    <h6>145</h6>
+                                    <h6> {{summe_casterie_vendus}} kg</h6>
                                     
               
                                   </div>
@@ -256,21 +204,10 @@
                           <div class="col-xxl-3 col-md-6 dashboard">
                             <div class="card info-card sales-card ">
               
-                              <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
-                                  </li>
-              
-                                  <li><a class="dropdown-item" href="#">Today</a></li>
-                                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                              </div>
+                         
               
                               <div class="card-body">
-                                <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
+                                <h5 class="card-title">casterie transformées</h5>
               
                                 <div class="d-flex align-items-center">
                                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -278,33 +215,21 @@
                                   </div>
                                   <div class="ps-3">
                                     
-                                    <h6>145</h6>
+                                    <h6>{{summe_casterie_transformers}} kg</h6>
                                     
               
                                   </div>
                                 </div>
                               </div>
-              
                             </div>
                           </div>
                           <div class="col-xxl-3 col-md-6 dashboard">
                             <div class="card info-card sales-card ">
               
-                              <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
-                                  </li>
-              
-                                  <li><a class="dropdown-item" href="#">Today</a></li>
-                                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                              </div>
+                              
               
                               <div class="card-body">
-                                <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
+                                <h5 class="card-title">casterie en stock </h5>
               
                                 <div class="d-flex align-items-center">
                                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -312,7 +237,7 @@
                                   </div>
                                   <div class="ps-3">
                                     
-                                    <h6>145</h6>
+                                    <h6>{{en_stocks}} kg</h6>
                                     
               
                                   </div>
@@ -321,11 +246,8 @@
               
                             </div>
                           </div>
-                          
-                        </div>
-                      </div>
                       
-                      <h5 class="card-title"> </h5>
+                          <h3 class="title text-danger"> La teneur moyenne est de {{ moyenne_teneur}} %</h3>
                      
                      
                       
@@ -348,7 +270,7 @@
                             {% for i in sortie %}
                           <tr>
                             
-                            <th scope="row">{{ i.id }}</th>
+                            <th scope="row"><a class=" text-danger bold " href="../sortir/{{ i.id }}"> {{ i.id }}<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></a></th>
           
                             <td>{{ i.clients.nom_clients }}</td>
                             <td>{{ i.produits.nomProdui }}</td>
@@ -375,9 +297,10 @@
                           
                         </tbody>
                       </table>
+                      <button onclick="myfun('pt')" class="btn btn-primary mt-3">generer un rapport</button>
                     </div>
                       <!-- End Table with stripped rows -->
-              <button onclick="myfun('pt')" class="btn btn-primary mt-3">generer un rapport</button>
+              
                     </div>
                   </div>
           

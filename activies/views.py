@@ -17,6 +17,29 @@ fournisseur = fournisseurs.objects.all().values()
 
 
 
+
+
+def clientst(request):
+    if request.POST == 'POST':
+        nomClient = request.POST['first']
+        postomClient = request.POST['last']
+        villeClient = request.POST['ville']
+        sexeClient = request.POST['sexe']
+        saveClient = clients(nom_clients = nomClient, sexe = sexeClient, telephone = villeClient)
+        saveClient.save()
+        url = reverse('vente')
+        ret = HttpResponseRedirect(url)
+        return ret
+    else:
+        print('null')
+    return render(request, 'pages/client.html')
+    
+def facture(request):
+    
+    return render(request, 'pages/facture.html')
+            
+
+
 def index(request):
 
     moyenne_teneur_etain = refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg']
@@ -187,10 +210,13 @@ def transformation(request):
     rafinage = refinering.objects.select_related('fourrafine','produits')
     moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
     moyenne_teneurs = round(moyenne_teneur, 2)
-    summe_casterie_achater = entrees.objects.all().filter(produits__id = 1)
-    summe_casterie_achaters = summe_casterie_achater.aggregate(Sum('quantite'))['quantite__sum']
     summe_casterie_four = smelting.objects.all().filter(produits__id = 1)
     summe_casterie_fours = summe_casterie_four.aggregate(Sum('quantite_entrer'))['quantite_entrer__sum']
+    summe_etain_brut_fours = summe_casterie_four.aggregate(Sum('quantite_out'))['quantite_out__sum']
+
+    summe_casterie_achater = entrees.objects.all().filter(produits__id = 1)
+    summe_casterie_achaters = summe_casterie_achater.aggregate(Sum('quantite'))['quantite__sum']
+    
     summe_casterie_vendu = sorties.objects.all().filter(produits__id = 1)
     summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
     en_four = summe_casterie_achaters - summe_casterie_fours
@@ -222,6 +248,8 @@ def transformation(request):
         'rafinage':rafinage,
         'moyenne_teneur_etains':moyenne_teneur_etains,
         'en_four': en_four,
+        'summe_casterie_fours':summe_casterie_fours,
+        'summe_etain_brut_fours':summe_etain_brut_fours,
         
     }
 
@@ -259,15 +287,15 @@ def vente(request):
             client_id = clients.objects.get(id = int(clientt))
             quantite = request.POST['quantite']
             prix_de_vente = request.POST['prix_vente']
-           
+        
             
             if en_stocks > 20:
                 
                 if quantite != '' and prix_de_vente != '':
-                    pt = float(quantite) * float(prix_de_vente)
+                    
                 
                     if float(quantite) < en_stocks:
-                        
+                        pt = float(quantite) * float(prix_de_vente)
                         vente = sorties(clients = client_id, produits = produit_id, prix_vente = prix_de_vente, quantite = quantite, teneur = moyenne_teneurs,prix_total = pt)
                         vente.save()
                         url = reverse('vente')
@@ -288,14 +316,15 @@ def vente(request):
         'sortie': summe_casterie_vendu,
         'produit': produit,
         'client': client,
-        'moyenne_teneur':entrees.objects.aggregate(Avg('teneur'))['teneur__avg'],
+        'moyenne_teneur':round(entrees.objects.aggregate(Avg('teneur'))['teneur__avg'],2),
         'total_general':summe_casterie_vendus,
         'total_prix_vente':total_prix_vente,
-        
         'prix_total':prix_total,
         'summe_casterie_achaters':summe_casterie_achaters,
         'en_stocks':en_stocks,
         'sango':sangos,
+        'summe_casterie_transformers':summe_casterie_transformers,
+        'summe_casterie_vendus':summe_casterie_vendus,
         # 'alet':alets,
 
         
@@ -304,6 +333,8 @@ def vente(request):
     return render(request, 'pages/vente.html',context)
 
 def achat(request):
+
+   
     entres = entrees.objects.select_related('fournisseurs','produits')
     total_general = entrees.objects.aggregate(Sum('prix_total'))['prix_total__sum']
     total_prix_vente = entrees.objects.aggregate(Sum('prix_achat'))['prix_achat__sum']
@@ -313,6 +344,15 @@ def achat(request):
 
     summe_casterie_achater = entrees.objects.all().filter(produits__id = 1)
     summe_casterie_achaters = summe_casterie_achater.aggregate(Sum('quantite'))['quantite__sum']
+    
+    summe_casterie_four = smelting.objects.all().filter(produits__id = 1)
+    summe_casterie_fours = summe_casterie_four.aggregate(Sum('quantite_entrer'))['quantite_entrer__sum']
+
+    summe_casterie_vendu = sorties.objects.all().filter(produits__id = 1)
+    summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
+    moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
+    moyenne_teneurs = round(moyenne_teneur, 2)
+    en_four = summe_casterie_achaters - (summe_casterie_vendus + summe_casterie_fours)
 
     
         
@@ -355,8 +395,11 @@ def achat(request):
         'total_quantite':total_quantite,
         'summe_casterie_vendus':summe_casterie_vendus,
         'summe_casterie_achaters':summe_casterie_achaters,
-        
+        'en_four':en_four,
         'entres':entres,
+        'moyenne_teneurs':moyenne_teneurs,
+        'summe_casterie_fours':summe_casterie_fours,
+        
         
     }
     return render(request, 'pages/achat.html',context)
