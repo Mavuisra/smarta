@@ -17,6 +17,15 @@ fournisseur = fournisseurs.objects.all().values()
 
 
 
+def facture(request, id):
+    gg = sorties.objects.get(id=id)
+
+    context = {
+        'g': gg,
+    
+    }
+
+    return render(request, 'pages/facture.html',context)
 
 
 def clientst(request):
@@ -34,9 +43,7 @@ def clientst(request):
         print('null')
     return render(request, 'pages/client.html')
     
-def facture(request):
-    
-    return render(request, 'pages/facture.html')
+
             
 
 

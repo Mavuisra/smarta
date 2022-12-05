@@ -43,7 +43,7 @@
     <div class="container">
         <section class="section align-center" id="pt">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body" style="background-color: rgba(27, 11, 252, 0.144) ";>
                           
                      <div style="text-align: center ;">
                       <div class="bg-blue">
@@ -52,25 +52,24 @@
                           </div>
                           <h2 class=" text-bold text-danger">REPUBIQUE DEMOCRATIQUE DU CONGO</h2>
                         <h3 class="text-primary">ENTREPRISE A.M.M</h3> 
-                          <h5 class="text-primary">Facture N°.......  <span style="text-align: right; margin-left: 320px;">date :</span></h4> <br><br>
+                          <h5 style="background-color: rgba(14, 11, 48, 0.144);" class="text-primary">Facture N°{{g.id}}  <span style="text-align: right; margin-left: 320px;">date : {{g.date_sortie}}</span></h4> <br><br>
                           <div class="col-md-12">
                             <div class="row">
                              <div class="col-md-12" style=" ">
                               <div class="row">
                             <div  class="col-md-6" style=" text-align: left;">
-                            <h2> Nom client : </h2>
-                            <h2> post-nom : </h2>
-                            <h2> telephone:</h2>
-                            <h2> commune :</h2>
-                            <h2> ville :</h2>
+                            <h2> Noms client :{{g.clients.nom_clients}} </h2>
+                            <h2> telephone: {{g.clients.telephone}}</h2>
+                            <h2> sexe : {{g.clients.sexe}}</h2>
+                            <h2> ville : kinshasa</h2>
                               </div>
                               <div  class="col-md-6" style=" text-align: left;">
                                 
-                                <h2> Produit : </h2>
-                                <h2> quantite par kg :</h2>
-                                <h2> prix unitaire :</h2>
-                                <h2> teneur :</h2>
-                                <h2> prix total :</h2>
+                                <h2> Produit : <span style="color: rgb(236, 13, 13);"> {{g.produits.nomProdui}}</span></h2>
+                                <h2> quantite par kg : <span style="color: rgb(236, 13, 13);"> {{g.quantite}}kg</span> </h2>
+                                <h2> prix unitaire : {{ g.prix_vente }}$</h2>
+                                <h2> teneur :{{g.teneur}} %</h2>
+                                <h2> prix total : {{g.prix_total}} $</h2>
                               </div>
                               </div>
                               
