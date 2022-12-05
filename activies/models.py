@@ -20,6 +20,8 @@ class clients(models.Model):
     created_at  =  models.DateTimeField(auto_now = True)
     def __str__(self) :
         return self.nom_clients
+    class Meta():
+        ordering = ['-created_at']
 class fournisseurs(models.Model):
  
     nom_fournisseurs = models.CharField(max_length = 50)
@@ -39,6 +41,8 @@ class sorties(models.Model):
     tvaPourcentage = models.FloatField(default= '0.0')
     date_sortie  =  models.DateTimeField(auto_now = True)
     prix_total = models.DecimalField(max_digits = 8, decimal_places = 2, default = 0.0)
+    class Meta():
+        ordering = ['-date_sortie']
            
    
 class entrees(models.Model):

@@ -31,7 +31,6 @@ def facture(request, id):
 def clientst(request):
     if request.POST == 'POST':
         nomClient = request.POST['first']
-        postomClient = request.POST['last']
         villeClient = request.POST['ville']
         sexeClient = request.POST['sexe']
         saveClient = clients(nom_clients = nomClient, sexe = sexeClient, telephone = villeClient)
@@ -279,6 +278,7 @@ def vente(request):
 
     en_stocks = None
     sangos= None
+    alert = 0
     
     
     if (((summe_casterie_achaters  != None) or ( summe_casterie_vendus != None))) and (summe_casterie_achaters > (summe_casterie_vendus + summe_casterie_transformers)):
@@ -311,14 +311,14 @@ def vente(request):
                         
                 
                     else:
-                        sangos = 'la quantité en stock de la  casterie est de {} Kg cela ne suffit pas pour effectuer la vente !!'.format(en_stocks)
-                        alets =1
+                        sangos = 'la quantité en stock de la  casterie est de {} Kg mais vous voulez vendre {} kg cette operation est impossible!!'.format(en_stocks,quantite)
+                        alert = alert+1
                 else:
                         sangos = 'remplissez touts les champs'
-                        alets =1
+                        
             else:
                 sangos = 'la quantité en stock de la  casterie est de {} Kg cela ne suffit pas pour effectuer la vente !!'.format(en_stocks)
-                alets =1
+                alert = alert+1
     context = {
         'sortie': summe_casterie_vendu,
         'produit': produit,
@@ -332,7 +332,7 @@ def vente(request):
         'sango':sangos,
         'summe_casterie_transformers':summe_casterie_transformers,
         'summe_casterie_vendus':summe_casterie_vendus,
-        # 'alet':alets,
+        'alert':alert,
 
         
     }
@@ -411,3 +411,79 @@ def achat(request):
     }
     return render(request, 'pages/achat.html',context)
 
+def vente_etain(request):
+    
+    summe_casterie_vendu = sorties.objects.all().filter(produits__id = 3)
+    summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
+    total_prix_vente = summe_casterie_vendu.aggregate(Sum('prix_vente'))['prix_vente__sum']
+    prix_total = summe_casterie_vendu.aggregate(Sum('prix_total'))['prix_total__sum']
+
+
+
+    en_stocks = None
+    sangos= None
+    alert = 0
+    summe_etain_transformer = refinering.objects.all().filter(produits__id = 3)
+    summe_etain_transformers = summe_etain_transformer.aggregate(Sum('quantite_sortie'))['quantite_sortie__sum']
+
+    summe_etain_vendu = sorties.objects.all().filter(produits__id = 3)
+    summe_etain_vendus = summe_etain_vendu.aggregate(Sum('quantite'))['quantite__sum']
+    en_stocks_etain= summe_etain_transformers - summe_etain_vendus
+
+    
+    
+    if summe_etain_transformers > summe_etain_vendus:
+
+        en_stocks_etain = summe_etain_transformers - summe_etain_vendus
+        
+        
+        if request.method == 'POST':
+            
+            produitt = request.POST['produit']
+            clientt = request.POST['client']
+            produit_id = produits.objects.get(id = int(produitt))
+            client_id = clients.objects.get(id = int(clientt))
+            quantite = request.POST['quantite']
+            prix_de_vente = request.POST['prix_vente']
+        
+            
+            if en_stocks_etain > 10:
+                
+                if quantite != None and prix_de_vente != None:
+                    
+                    if float(quantite) < en_stocks_etain:
+                        pt = float(quantite) * float(prix_de_vente)
+                        vente = sorties(clients = client_id, produits = produit_id, prix_vente = prix_de_vente, quantite = quantite, teneur = round(refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg'],2),prix_total = pt)
+                        vente.save()
+                        url = reverse('vente_etain')
+                        ret = HttpResponseRedirect(url)
+                        return ret
+                        
+                
+                    else:
+                        sangos = 'la quantité en stock de l\'etain est de {} Kg cela ne suffit pas pour effectuer une vente !!'.format(en_stocks_etain)
+                        alert = alert+1
+                else:
+                        sangos = 'remplissez touts les champs'
+                        alets =1
+            else:
+                sangos = 'la quantité en stock de la  casterie est de {} Kg cela ne suffit pas pour effectuer la vente !!'.format(en_stocks_etain)
+                alets =1
+    context = {
+        'sortie': summe_casterie_vendu,
+        'produit': produit,
+        'client': client,
+        'moyenne_teneur':round(refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg'],2),
+        'total_general':summe_casterie_vendus,
+        'total_prix_vente':total_prix_vente,
+        'prix_total':prix_total,
+        'en_stocks':en_stocks_etain,
+        'sango':sangos,
+        'summe_casterie_vendus':summe_casterie_vendus,
+        'summe_etain_vendus':summe_etain_vendus,
+        'summe_etain_transformers':summe_etain_transformers,
+     
+        
+    }
+ 
+    return render(request, 'pages/vente_etain.html', context)

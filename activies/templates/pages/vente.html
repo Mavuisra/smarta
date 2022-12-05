@@ -15,10 +15,18 @@
 <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Data Tables</h1>
+      {% if sango == None %}
+      <h1></h1>
+      {% else %}
+      
+      <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+         <b>alert, {{sango}}</b> 
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endif %}
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href=" ">Home</a></li>
+          <li class="breadcrumb-item"><a href=" ">alert {{alert}}</a></li>
           <li class="breadcrumb-item">Tables</li>
           <li class="breadcrumb-item active">Data</li>
         </ol>
@@ -53,13 +61,8 @@
                   </span>
                   
                             
-                            <div class="col-12">
-                              <button class="btn btn-primary" type="submit">+creer</button>
-                            </div>
-                          </form>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
+                         
+                      
                           
                         </div>
                       </div>

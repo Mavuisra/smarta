@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import index, vente, transformation,sortie_etain_brut,updaterecord,updaterecord_bru,sortie_etain,achat,rafinage,clientst,facture
+from .views import index, vente, transformation,sortie_etain_brut,updaterecord,updaterecord_bru,sortie_etain,achat,rafinage,clientst,facture,vente_etain
 urlpatterns = [
     path('', index, name = 'index' ),
     path('vente/', vente, name = 'vente'),
@@ -9,7 +9,7 @@ urlpatterns = [
     path('achat/', achat, name = 'achat'),
     path('ajouterClient/', clientst, name = 'clientst'),
     path('rafinage/', rafinage, name = 'rafinage'),
-    # path('vente_etain/', vente_etain, name = 'vente_etain'),
+    path('vente_etain/', vente_etain, name = 'vente_etain'),
     path('transformation/', transformation, name = 'transformation'),
     path('sortir/<int:id>', sortie_etain_brut, name = 'sortie_etain_brut'),
     path('sortir/updaterecord/<int:id>',updaterecord, name='updaterecord'),
