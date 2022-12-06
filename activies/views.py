@@ -177,8 +177,10 @@ def updaterecord_bru(request, id):
     if float(quantite_sorti) <=  float(quantite_entre):
         sortierfou.quantite_entree = float(sortierfou.quantite_entree) - float(quantite_sorti)
         sortierfou.produits = produit_id
+        sortierfou.teneur_sortie = ten_sortie
         sortierfou.quantite_sortie += float(quantite_sorti)
         sortierfou.save()
+
         url = reverse('rafinage')
         ret = HttpResponseRedirect(url)
         return ret
