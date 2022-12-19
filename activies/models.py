@@ -1,11 +1,7 @@
 from django.db import models
 import statistics
 
-
-
-# Create your models here.
-
-
+ 
 class produits(models.Model):
     nomProdui = models.CharField(max_length = 20)
     date_creation = models.DateTimeField(auto_now = True)

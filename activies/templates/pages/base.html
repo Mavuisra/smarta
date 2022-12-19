@@ -40,7 +40,7 @@
     <header id="header" class="header fixed-top d-flex align-items-center">
     
         <div class="d-flex align-items-center justify-content-between">
-          <a href="index.html" class="logo d-flex align-items-center">
+          <a href="../ " class="logo d-flex align-items-center">
             <img src="{% static './assets/img/logo.png '%}" alt="">
             <span class="d-none d-lg-block">SMART AMM</span>
           </a>
@@ -88,13 +88,13 @@
     
               <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                 <img src="{% static './assets/img/profile-img.jpg' %}" alt="Profile" class="rounded-circle">
-                <span class="d-none d-md-block dropdown-toggle ps-2">K. Olive</span>
+                <span class="d-none d-md-block dropdown-toggle ps-2">Bienvenu {{request.user}}</span>
               </a><!-- End Profile Iamge Icon -->
     
               <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                 <li class="dropdown-header">
-                  <h6>Kevin Olive</h6>
-                  <span>Adminstratrice</span>
+                  <h6>{{request.user}}</h6>
+                  <span>{{request.user.role}}</span>
                 </li>
                 <li>
                   <hr class="dropdown-divider">
@@ -131,7 +131,7 @@
                 </li>
     
                 <li>
-                  <a class="dropdown-item d-flex align-items-center" href="#">
+                  <a class="dropdown-item d-flex align-items-center" href="{% url 'logout'%}">
                     <i class="bi bi-box-arrow-right"></i>
                     <span>deconnexion </span>
                   </a>
@@ -152,7 +152,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href=" ">
+        <a class="nav-link " href="../  ">
           <i class="bi bi-grid"></i>
           <span>tableau de bord</span>
         </a>
@@ -168,7 +168,7 @@
               <i class="bi bi-circle"></i><span>Vente casterie</span>
             </a>
           </li>
-          <li>
+          
             <li>
               <a href="../vente_etain/">
                 <i class="bi bi-circle"></i><span>Vente etain</span>
@@ -189,15 +189,29 @@
               <i class="bi bi-circle"></i><span>rafinage</span>
             </a>
           </li>
-          <li>
-            <a href="../transformation/">
-              <i class="bi bi-circle"></i><span>paramettre</span>
-            </a>
-          </li>
+      
+        </li>
+        
          <!-- End Blank Page Nav -->
 
     </ul>
-
+<li class="nav-item">
+          <a class="nav-link collapsed" data-bs-target="#components-navd" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-menu-button-wide"></i><span>paramettre</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul id="components-navd" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+              <a href="../createUser/">
+                <i class="bi bi-circle"></i><span>creer un utilisateur</span>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'logout' %}">
+                <i class="bi bi-circle"></i><span>deconnexion</span>
+              </a>
+            </li>
+          </ul>
+        </li>
   </aside>
   <footer id="footer" class="footer">
     <div class="copyright">

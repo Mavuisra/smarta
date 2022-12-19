@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,8 +49,8 @@
             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
               <div class="d-flex justify-content-center py-4">
-                <a href=" index.html" class="logo d-flex align-items-center w-auto">
-                  <img src="{% static './assets/img/logo.png' %}" alt="">
+                <a href="" class="logo d-flex align-items-center w-auto">
+                  <img src="assets/img/logo.png" alt="">
                   <span class="d-none d-lg-block">AMM</span>
                 </a>
               </div><!-- End Logo -->
@@ -59,56 +60,47 @@
                 <div class="card-body">
 
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">connectez vous dans votre compte</h5>
-                    <p class="text-center small">entrer votre username et votre mot de pass</p>
+                    <h5 class="card-title text-center pb-0 fs-4">Creer Un compte</h5>
+                    <p class="text-center small">entrer les details de l'utilisateur</p>
                   </div>
 
-                  <form method="post" action="" class="row g-3 needs-validation" novalidate>
-                      {% csrf_token %}
+                  <form method="post" action="" class="row g-3 needs-validation" >
+                    {% csrf_token %}
                     <div class="col-12">
-                      <label for="yourUsername" class="form-label">Username</label>
-                      <div class="input-group has-validation">
-                        <span class="input-group-text" id="inputGroupPrepend">@</span>
-                        <input type="text" name="username" class="form-control" id="yourUsername" required>
-                        <div class="invalid-feedback"> entrer votre username.</div>
-                      </div>
+                      <label for="yourName" class="form-label">Nom</label>
+                            {{form.username}}
+                      <div class="invalid-feedback">svp, entrer le nom!</div>
                     </div>
-
+                    
                     <div class="col-12">
-                      <label for="yourPassword" class="form-label">Password</label>
-                      <input type="password" name="password" class="form-control" id="yourPassword" required>
-                      <div class="invalid-feedback">entrer mot de pass</div>
+                      <label for="yourEmail" class="form-label">Email</label>
+                      {{form.email}}
+                      <div class="invalid-feedback">svp enter enter l'email valide!</div>
                     </div>
-
+                    
                     <div class="col-12">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="remember" value="true" id="">
-                        <label class="form-check-label" for="rememberMe">me rappeler</label>
-                      </div>
+                      <label for="yourPassword" class="form-label">Mot de passe</label>
+                      {{form.password1}}
+                      <div class="invalid-feedback">svp entrer le mot de passe!</div>
                     </div>
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Login</button>
+                      <label for="yourPassword" class="form-label"> confirmer Mot de passe</label>
+                      {{form.password2}}
+                      <div class="invalid-feedback">svp entrer le mot de passe!</div>
                     </div>
-                    {% for message in messages %}
-                    {% if messages.success %}
-                    <p class="alert alert-success">{{message}}</p>
-                    {% else %}
-                    <p class="alert alert-danger">{{message}}</p>
-                    {% endif %}
-
-                    {% endfor %}
+             
+                    <div class="col-12">
+                      <button class="btn btn-primary w-100" type="submit">Create Account</button>
+                    </div>
+                    <div class="col-12">
+                      <p class="small mb-0">As t-il un compte deja? <a href=" {% url 'index' %}">Accueil</a></p>
+                    </div>
+                    
                   </form>
-
+                {{form.errors}}
                 </div>
               </div>
 
-              <div class="credits">
-                <!-- All the links in the footer should remain intact. -->
-                <!-- You can delete the links only if you purchased the pro version. -->
-                <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-                Designed by <a href="https://israelmavu.netlify.com/">MAVDEV</a>
-              </div>
 
             </div>
           </div>
@@ -123,11 +115,7 @@
       &copy; Copyright <strong><span>AMM</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
-      <!-- All the links in the footer should remain intact. -->
-      <!-- You can delete the links only if you purchased the pro version. -->
-      <!-- Licensing information: https://bootstrapmade.com/license/ -->
-      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-      Designed by <a href="https://israelmavu.netlify.com/">MAVDEV</a>
+     
     </div>
   </footer><!-- End Footer -->
 

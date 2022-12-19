@@ -1,10 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import clients, entrees,sorties, produits, clients, smelting, fourcasterie, refinering, fourrafine,fournisseurs
 from django.db.models import Sum, Avg, Count
 from django.db.models.functions import TruncMonth
-from django.forms import inlineformset_factory
+from django.contrib.auth.forms import UserCreationForm
+from .form import CreationUserForm
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
+
 
 
 # Create your views here.
@@ -15,7 +21,48 @@ fournisseur = fournisseurs.objects.all().values()
 
 
 
+def loginpage(request):
 
+    if request.user.is_authenticated:
+        return redirect('index')
+    else:
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request, username = username, password = password)
+            if user is not None:
+                login(request, user)
+                return redirect('index')
+            else:
+                messages.info(request, 'information invalides')
+        context = {
+            
+        
+        }
+        return render(request, 'pages/login.html',context)
+
+def createUser(request):
+
+    form = CreationUserForm()
+    if request.method == 'POST':
+        form = CreationUserForm(request.POST)
+        if form.is_valid:
+            form.save()
+            user = form.cleaned_data.get('username')
+            messages.success(request, f"l'utilisateur {user} a ete crée avec succès")
+            return redirect('login')
+        else:
+            pass
+
+    context = {
+    'form':form, 
+    
+    }
+    return render(request, 'pages/CreateUser.html',context)
+
+def logoutpage(request):
+    logout(request)
+    return redirect('login')
 
 def facture(request, id):
     gg = sorties.objects.get(id=id)
@@ -27,12 +74,11 @@ def facture(request, id):
 
     return render(request, 'pages/facture.html',context)
 
-
 def clientst(request):
-    if request.POST == 'POST':
-        nomClient = request.POST['first']
-        villeClient = request.POST['ville']
-        sexeClient = request.POST['sexe']
+    if request.method  == 'POST':
+        nomClient = request.POST['name']
+        villeClient = request.POST['Telephone']
+        sexeClient = request.POST['Sexe']
         saveClient = clients(nom_clients = nomClient, sexe = sexeClient, telephone = villeClient)
         saveClient.save()
         url = reverse('vente')
@@ -42,10 +88,20 @@ def clientst(request):
         print('null')
     return render(request, 'pages/client.html')
     
-
-            
-
-
+def fournisseurss(request):
+    if request.method  == 'POST':
+        fou = request.POST['name']
+        tel = request.POST['Telephone']
+        sexe = request.POST['Sexe']
+        sf = fournisseurs(nom_fournisseurs = fou, sexe = sexe, telephone =tel )
+        sf.save()
+        url = reverse('achat')
+        ret = HttpResponseRedirect(url)
+        return ret
+    else:
+        print('null')
+    return render(request, 'pages/fournisseur.html')
+@login_required(login_url = 'login')
 def index(request):
 
     moyenne_teneur_etain = refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg']
@@ -92,7 +148,7 @@ def index(request):
 
 
     return render(request, 'pages/index.html',context)
-
+@login_required(login_url = 'login')
 def rafinage(request):
     moyenne_teneur_etain = refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg']
     moyenne_teneur_etains = round(moyenne_teneur_etain, 2)
@@ -106,6 +162,7 @@ def rafinage(request):
    
     etain_entrain = refinering.objects.all().filter(produits__id = 3)
     etain_entrains = etain_entrain.aggregate(Sum('quantite_entree'))['quantite_entree__sum']
+    etain_sortie = etain_entrain.aggregate(Sum('quantite_sortie'))['quantite_sortie__sum']
     en_four = summe_casterie_sortie_fours - etain_entrains
 
     if summe_casterie_sortie_fours > etain_entrains:
@@ -133,14 +190,17 @@ def rafinage(request):
         'fourrafines':fourrafines,
         'rafinage':rafinage,
         'moyenne_teneur_etains':moyenne_teneur_etains,
-        'en_four': en_four,
+        'etain_sortie': en_four,
+        'en_four':en_four,
         'summe_casterie_sortie_fours':summe_casterie_sortie_fours,
+        'etain_entrains':etain_entrains,
+        'etain_sortie':etain_sortie,
         
     }
 
     return render(request, 'pages/rafinage.html',context)
 
-
+@login_required(login_url = 'login')
 def sortie_etain_brut(request, id):
     gg = smelting.objects.get(id=id)
     moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
@@ -151,7 +211,7 @@ def sortie_etain_brut(request, id):
     }
 
     return render(request, 'pages/sortie_etain_brut.html',context)
-
+@login_required(login_url = 'login')
 def sortie_etain(request, id):
     moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
     moyenne_teneurs = round(moyenne_teneur, 2)
@@ -164,7 +224,7 @@ def sortie_etain(request, id):
     }
 
     return render(request, 'pages/sortie_etain.html',context)
-
+@login_required(login_url = 'login')
 def updaterecord_bru(request, id):
     
     quantite_entre = request.POST['quantite_entree']
@@ -188,7 +248,7 @@ def updaterecord_bru(request, id):
         url = reverse('rafinage')
         ret = HttpResponseRedirect(url)
         return ret
-
+@login_required(login_url = 'login')
 def updaterecord(request, id):
 
     quantite_sorti = request.POST['quantite_out']
@@ -208,7 +268,7 @@ def updaterecord(request, id):
         url = reverse('transformation')
         ret = HttpResponseRedirect(url)
         return ret
-    
+@login_required(login_url = 'login')
 def transformation(request):
     moyenne_teneur_etain = refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg']
     moyenne_teneur_etains = round(moyenne_teneur_etain, 2)
@@ -262,7 +322,7 @@ def transformation(request):
     }
 
     return render(request, 'pages/transformation.html',context)
-    
+@login_required(login_url = 'login')
 def vente(request):
     moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
     moyenne_teneurs = round(moyenne_teneur, 2)
@@ -340,7 +400,7 @@ def vente(request):
     }
  
     return render(request, 'pages/vente.html',context)
-
+@login_required(login_url = 'login')
 def achat(request):
 
    
@@ -412,7 +472,7 @@ def achat(request):
         
     }
     return render(request, 'pages/achat.html',context)
-
+@login_required(login_url = 'login')
 def vente_etain(request):
     
     summe_casterie_vendu = sorties.objects.all().filter(produits__id = 3)
