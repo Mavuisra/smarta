@@ -115,13 +115,13 @@
                                 <div class="row mb-3">
                                   <label for="inputNumber" class="col-sm-3 col-form-label">quantité/Kg</label>
                                   <div class="col-sm-9">
-                                    <input type="number" name="quantite" class="form-control">
+                                    <input type="text" name="quantite" class="form-control">
                                   </div>
                                 </div>
                                 <div class="row mb-3">
                                   <label for="inputNumber" class="col-sm-4 col-form-label">Prix de vente</label>
                                   <div class="col-sm-8">
-                                    <input type="number" name="prix_vente" class="form-control">
+                                    <input type="text" name="prix_vente" class="form-control">
                                   </div>
                                 </div>
                                 
@@ -131,7 +131,13 @@
                                     <input type="number" name = "teneur" class="form-control" value="{{ moyenne_teneur }}" disabled>
                                   </div>
                                 </div>
-                
+                                <div class="row mb-3">
+                                  
+                                  <div class="col-sm-6">
+                                    <input type="hidden" name = "user" class="form-control" value="{{request.user.users.id}}" disabled>
+                                  </div>
+                                </div>
+                                
                                 <div class="row mb-3">
                                   <label class="col-sm-2 col-form-label"></label>
                                   <div class="col-sm-10">

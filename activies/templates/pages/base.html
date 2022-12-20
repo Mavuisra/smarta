@@ -87,21 +87,25 @@
             <li class="nav-item dropdown pe-3">
     
               <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                <img src="{% static './assets/img/profile-img.jpg' %}" alt="Profile" class="rounded-circle">
-                <span class="d-none d-md-block dropdown-toggle ps-2">Bienvenu {{request.user}}</span>
+                <img src="{{ request.user.users.image_pic.url }}" alt="Profile" class="rounded-circle">
+                <span class="d-none d-md-block dropdown-toggle ps-2">Bienvenu {{request.user }}</span>
               </a><!-- End Profile Iamge Icon -->
     
               <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                 <li class="dropdown-header">
                   <h6>{{request.user}}</h6>
-                  <span>{{request.user.role}}</span>
+                  {% if request.user.is_staff %}
+                  <h3>Administarteur</h3>
+                  {% else %}
+                  <h3>Agent</h3>
+                  {% endif %}
                 </li>
                 <li>
                   <hr class="dropdown-divider">
                 </li>
     
                 <li>
-                  <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                  <a class="dropdown-item d-flex align-items-center" href="{% url 'user_profil'%}">
                     <i class="bi bi-person"></i>
                     <span>Profile</span>
                   </a>
@@ -202,7 +206,9 @@
           <ul id="components-navd" class="nav-content collapse " data-bs-parent="#sidebar-nav">
             <li>
               <a href="../createUser/">
+                {% if request.user.is_staff %}
                 <i class="bi bi-circle"></i><span>creer un utilisateur</span>
+                {% endif %}
               </a>
             </li>
             <li>

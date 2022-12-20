@@ -1,16 +1,16 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .models import clients, entrees,sorties, produits, clients, smelting, fourcasterie, refinering, fourrafine,fournisseurs
+from .models import clients, entrees,sorties, produits, clients, smelting, fourcasterie, refinering, fourrafine,fournisseurs,users
 from django.db.models import Sum, Avg, Count
 from django.db.models.functions import TruncMonth
 from django.contrib.auth.forms import UserCreationForm
-from .form import CreationUserForm
+from .form import CreationUserForm,usersForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
-
+from django.contrib.auth.models import Group
+from .decorator import unauthenticated_user,allowed_users
 
 
 # Create your views here.
@@ -19,27 +19,35 @@ produit = produits.objects.all().values()
 client = clients.objects.all().values()
 fournisseur = fournisseurs.objects.all().values()
 
+def user_profil(request):
+    user = request.user.users
+    form = usersForm(instance=user)
+    if request.method == 'POST':
+        form = usersForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+    context = {
+           'form':form,
+    }
 
-
+    
+    return render(request, 'pages/user_profil.html',context)
+@unauthenticated_user
 def loginpage(request):
-
-    if request.user.is_authenticated:
-        return redirect('index')
-    else:
-        if request.method == 'POST':
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            user = authenticate(request, username = username, password = password)
-            if user is not None:
-                login(request, user)
-                return redirect('index')
-            else:
-                messages.info(request, 'information invalides')
-        context = {
-            
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username = username, password = password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.info(request, 'information invalides')
+    context = {
         
-        }
-        return render(request, 'pages/login.html',context)
+    
+    }
+    return render(request, 'pages/login.html',context)
 
 def createUser(request):
 
@@ -47,9 +55,17 @@ def createUser(request):
     if request.method == 'POST':
         form = CreationUserForm(request.POST)
         if form.is_valid:
-            form.save()
-            user = form.cleaned_data.get('username')
-            messages.success(request, f"l'utilisateur {user} a ete crée avec succès")
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            group = Group.objects.get(name = 'user')
+            user.groups.add(group)
+            users.objects.create(
+                user = user,
+                name = users.name
+
+            )
+
+            messages.success(request, f"l'utilisateur {username} a ete crée avec succès")
             return redirect('login')
         else:
             pass
@@ -101,7 +117,9 @@ def fournisseurss(request):
     else:
         print('null')
     return render(request, 'pages/fournisseur.html')
+
 @login_required(login_url = 'login')
+@allowed_users(allowed_roles = ['admin'])
 def index(request):
 
     moyenne_teneur_etain = refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg']
@@ -130,18 +148,21 @@ def index(request):
 
     revenu_casterie = sorties.objects.all().filter(produits__id = 1)
     revenu_casteries = revenu_casterie.aggregate(Sum('prix_total'))['prix_total__sum']
-    rapport = sorties.objects.filter().extra({'month':"Extract(month from created )"} ).values_list('month').annotate(Sum('prix_total'))
+    # rapport = sorties.objects.filter().extra({'month':"Extract(month FROM 	sorties.date_sortie )"} ).values_list('month').annotate(Sum('prix_total'))
     moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
     moyenne_teneurs = round(moyenne_teneur, 2)
-    # sorties.objects.annotate(month = TruncMonth('date_sortie')).values('month').annotate(rev = Sum('prix_total')).values('month','rev')
+    # g = sorties.objects.annotate(month = TruncMonth('date_sortie')).values('month').annotate(rev = Sum('prix_total')).values('rev','month')
+    g = sorties.objects.values('date_sortie__month').annotate(tota = Sum('prix_total')).values('date_sortie__month','tota')
+    print('hello',g)
+     
     context = {
-        
         'en_stocks':en_stocks_casterie,
         'en_stocks_etain':en_stocks_etain,
         'moyenne_teneurs':moyenne_teneurs,
         'moyenne_teneur_etains':moyenne_teneur_etains,
         'revenu_etains':revenu_etains,
         'revenu_casteries':revenu_casteries,
+        
         
     }
     
@@ -195,6 +216,7 @@ def rafinage(request):
         'summe_casterie_sortie_fours':summe_casterie_sortie_fours,
         'etain_entrains':etain_entrains,
         'etain_sortie':etain_sortie,
+        
         
     }
 
@@ -479,7 +501,8 @@ def vente_etain(request):
     summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
     total_prix_vente = summe_casterie_vendu.aggregate(Sum('prix_vente'))['prix_vente__sum']
     prix_total = summe_casterie_vendu.aggregate(Sum('prix_total'))['prix_total__sum']
-
+    df = request.user
+    print(prix_total)
 
 
     en_stocks = None
@@ -505,9 +528,12 @@ def vente_etain(request):
             clientt = request.POST['client']
             produit_id = produits.objects.get(id = int(produitt))
             client_id = clients.objects.get(id = int(clientt))
+            user = request.POST['user']
+            user_id = users.objects.get(id = int(user))
+
             quantite = request.POST['quantite']
             prix_de_vente = request.POST['prix_vente']
-        
+            
             
             if en_stocks_etain > 10:
                 
@@ -515,7 +541,7 @@ def vente_etain(request):
                     
                     if float(quantite) < en_stocks_etain:
                         pt = float(quantite) * float(prix_de_vente)
-                        vente = sorties(clients = client_id, produits = produit_id, prix_vente = prix_de_vente, quantite = quantite, teneur = round(refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg'],2),prix_total = pt)
+                        vente = sorties(user = user_id, clients = client_id, produits = produit_id, prix_vente = prix_de_vente, quantite = quantite, teneur = round(refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg'],2),prix_total = pt)
                         vente.save()
                         url = reverse('vente_etain')
                         ret = HttpResponseRedirect(url)
@@ -544,6 +570,7 @@ def vente_etain(request):
         'summe_casterie_vendus':summe_casterie_vendus,
         'summe_etain_vendus':summe_etain_vendus,
         'summe_etain_transformers':summe_etain_transformers,
+        'df':df,
      
         
     }

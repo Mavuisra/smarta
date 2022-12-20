@@ -1,6 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import User
 import statistics
-
+import datetime
  
 class produits(models.Model):
     nomProdui = models.CharField(max_length = 20)
@@ -26,19 +27,39 @@ class fournisseurs(models.Model):
     created_at  =  models.DateTimeField(auto_now = True)
     def __str__(self) :
         return self.nom_fournisseurs
+class users(models.Model):
+    user = models.OneToOneField(User, null=True, blank=True,on_delete=models.CASCADE)
+    name = models.CharField(max_length = 20)
+    post_nom =models.CharField(max_length = 20)
+    ville =models.CharField(max_length = 20) 
+    matricule = models.CharField(max_length = 20)
+    telephone = models.CharField(max_length = 20)
+    email =models.CharField(max_length = 20)
+    image_pic = models.ImageField(null = True, blank=True, default='media/prof.jpeg', upload_to='media') 
+    date_created = models.DateTimeField(default= datetime.datetime.today())
+    def __str__(self) :
+        return self.name
 
 class sorties(models.Model):
-    
+    user = models.ForeignKey(users, null=True, blank=True,on_delete=models.CASCADE)
     clients = models.ForeignKey("clients", on_delete = models.CASCADE, related_name = 'clients')
     produits = models.ForeignKey("produits", on_delete = models.CASCADE, related_name = 'produit')
     prix_vente = models.DecimalField(max_digits = 8, decimal_places = 2)
     quantite = models.FloatField()
     teneur = models.DecimalField(max_digits = 8, decimal_places = 2)
     tvaPourcentage = models.FloatField(default= '0.0')
-    date_sortie  =  models.DateTimeField(auto_now = True)
+    
+    date_sortie  =  models.DateTimeField(default= datetime.datetime.today())
     prix_total = models.DecimalField(max_digits = 8, decimal_places = 2, default = 0.0)
     class Meta():
         ordering = ['-date_sortie']
+
+
+    
+
+
+
+
            
    
 class entrees(models.Model):

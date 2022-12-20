@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import produits, clients, fournisseurs, sorties,entrees,stock, smelting,refinering, fourcasterie,fourrafine
+from .models import produits, clients, fournisseurs, sorties,entrees,stock, smelting,refinering, fourcasterie,fourrafine,users
 
 # Register your models here.
 class clientsAdmin(admin.ModelAdmin):
@@ -15,7 +15,7 @@ class fournisseursAdmin(admin.ModelAdmin):
 admin.site.register(fournisseurs,fournisseursAdmin)
 
 class sortiesAdmin(admin.ModelAdmin):
-    list_display = ('clients','produits','prix_vente','quantite','teneur','tvaPourcentage','date_sortie','prix_total')
+    list_display = ('clients','produits','prix_vente','quantite','teneur','tvaPourcentage','date_sortie','prix_total','user')
 admin.site.register(sorties,sortiesAdmin)
 
 class entreesAdmin(admin.ModelAdmin):
@@ -41,6 +41,8 @@ admin.site.register(fourcasterie,fourcasterieAdmin)
 class fourrafineAdmin(admin.ModelAdmin):
     list_display = ('libelle','date_create')
 admin.site.register(fourrafine,fourrafineAdmin)
-
+class usersAdmin(admin.ModelAdmin):
+    list_display = ('user','name','post_nom','ville','matricule','telephone','email','image_pic')
+admin.site.register(users,usersAdmin)
 
 

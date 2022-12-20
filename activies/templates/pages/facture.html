@@ -43,18 +43,77 @@
     <div class="container">
         <section class="section align-center" id="pt">
             <div class="card">
-                <div class="card-body" style="background-color: rgba(27, 11, 252, 0.144) ";>
-                          
+                <div class="card-body" style="background-color: rgba(255, 255, 255, 0.144) ";>
+                  
+                  </table>
                      <div style="text-align: center ;">
                       <div class="bg-blue">
                         <div style="text-align: right; margin-top: 20px;">
                             <img src="{% static './assets/img/logo.png '%}" alt="" >
                           </div>
-                          <h2 class=" text-bold text-danger">REPUBIQUE DEMOCRATIQUE DU CONGO</h2>
-                        <h3 class="text-primary">ENTREPRISE A.M.M</h3> 
-                          <h5 style="background-color: rgba(14, 11, 48, 0.144);" class="text-primary">Facture N°{{g.id}}  <span style="text-align: right; margin-left: 320px;">date : {{g.date_sortie}}</span></h4> <br><br>
-                          <div class="col-md-12">
+                   
+                        <h3 class="">ENTREPRISE A.M.M</h3> 
+                          <h5 style="background-color: rgba(80, 80, 83, 0.144);" class="text-primary">Facture N°{{g.id}}  <span style="text-align: right; margin-left: 320px;">date : {{g.date_sortie}}</h4> <br><br>
+                            
+                            
+                            
+                              <div class="col-md-12"style="border: 1px solid black;">
+                                <div class="row">
+                              <div  class="col-md-6">
+                            <p> Noms client :{{g.clients.nom_clients}} </p>
+                            <p> telephone: {{g.clients.telephone}}</p>
+                            <p> sexe : {{g.clients.sexe}}</p>
+                            <p> ville : kinshasa</p>
+
+                           </div>
+                            
+                             <div class="col-md-6"> 
+                                <p > Noms agent :{{g.user.name}}</p>
+                                <p > ville:{{g.user.ville}}</p>
+                            </div>
+                            </div>
+                           
+                            </div>
+                            
+                              </div>
+                                
+                                 
+                                  
+                                    
+                             
                             <div class="row">
+                              <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">produit</th>
+                                    <th scope="col">prix de vente</th>
+                                    <th scope="col">quantité</th>
+                                    <th scope="col">teneur</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <th scope="row">1</th>
+                                    <td>{{g.produits.nomProdui}}</td>
+                                    <td>{{g.prix_vente}}</td>
+                                    <td>{{g.quantite}}</td>
+                                    <td>{{g.teneur}}</td>
+                                  </tr>
+                                  
+                                </tbody>
+                                </table>
+                              
+                                <!-- <div  class="col-md-6" style=" text-align: left;">
+                                
+                                <h2> Produit : <span style="color: rgb(236, 13, 13);"> {{g.produits.nomProdui}}</span></h2>
+                                <h2> quantite par kg : <span style="color: rgb(236, 13, 13);"> {{g.quantite}}kg</span> </h2>
+                                <h2> prix unitaire : {{ g.prix_vente }}$</h2>
+                                <h2> teneur :{{g.teneur}} %</h2>
+                                <h2> prix total : {{g.prix_total}} $</h2>
+                              </div> -->
+                          <div class="col-md-12">
+                            <!-- <div class="row">
                              <div class="col-md-12" style=" ">
                               <div class="row">
                             <div  class="col-md-6" style=" text-align: left;">
@@ -62,15 +121,8 @@
                             <h2> telephone: {{g.clients.telephone}}</h2>
                             <h2> sexe : {{g.clients.sexe}}</h2>
                             <h2> ville : kinshasa</h2>
-                              </div>
-                              <div  class="col-md-6" style=" text-align: left;">
-                                
-                                <h2> Produit : <span style="color: rgb(236, 13, 13);"> {{g.produits.nomProdui}}</span></h2>
-                                <h2> quantite par kg : <span style="color: rgb(236, 13, 13);"> {{g.quantite}}kg</span> </h2>
-                                <h2> prix unitaire : {{ g.prix_vente }}$</h2>
-                                <h2> teneur :{{g.teneur}} %</h2>
-                                <h2> prix total : {{g.prix_total}} $</h2>
-                              </div>
+                              </div> -->
+                              
                               </div>
                               
                                 
@@ -94,7 +146,7 @@
 
     </div>
   </main><!-- End #main -->
-  <footer id="footer" class="footer">
+  <!-- <footer id="footer" class="footer">
     <div class="copyright">
       &copy; Copyright <strong><span>AMM</span></strong>. All Rights Reserved
     </div>
@@ -102,9 +154,8 @@
       
       Designed by <a href="https://israelmavu.netlify.com/">MAVDEV</a>
     </div>
-  </footer><!-- End Footer -->
+  </footer>End Footer -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
   <script src="{% static './assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
