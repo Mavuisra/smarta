@@ -1,639 +1,347 @@
 {% extends 'pages/base.html' %}
-  <!-- ======= Header ======= -->
 
 
-  <!-- ======= Sidebar ======= -->
-<!-- End Sidebar-->
-
-
-
-  <!-- ======= Footer ======= -->
-  
 {% block index %}
-
-
 <main id="main" class="main">
 
-    <div class="pagetitle">
-      <h1>Table de données</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href=" ">Home</a></li>
-          <li class="breadcrumb-item">Achat</li>
-          <li class="breadcrumb-item active">table de vente</li>
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title"></h5>
+  <div class="pagetitle">
 
-        <!-- Bordered Tabs -->
-        <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-home" type="button" role="tab" aria-controls="home" aria-selected="true">Achat de la casterie</button>
-          </li>
+    <h1>Achat de la casterie </h1>
+    <nav>
+      <ol class="breadcrumb text-danger ">
+        <li class="breadcrumb-item text-primary"><a href="{% url 'index'%} ">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'vente'%} ">vendre la casterie</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'fondrerie'%} ">transformer la casterie</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'rafinage' %} ">transformer l'etain</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'vente_etain'%} ">vendre l'etain</a></li>
+        <li class="breadcrumb-item"><a class="" href="{% url 'add_Achat'%}">+ acheter</a></li>
+        <li class="breadcrumb-item active">faites l'Achat ici</li>
+      </ol>
+      <a class=" btn btn-primary" href="{% url 'add_vente_etain'%}">+ acheter</a>
+    </nav>
+  </div><!-- End Page Title -->
 
-        </ul>
-        <div class="tab-content pt-2" id="borderedTabContent">
-          <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
-              
-    <section class="section">
-      <div class="row">
-        <div class="col-lg-12">
-          
-          <span class=" tab-pane btn  active nav-tabs-bordered">
-               <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">
-                 + achater la casterie
-                 {{en_stocks}}
-              </button>
-              <a  class="btn btn-primary mb-3" href="../ajouterFouniseur">ajouter un fournisseur</a>
-          </span>
-          
-          
-          <div class="modal fade" id="modalDialogScrollable" tabindex="-1">
-            <div class="modal-dialog modal-dialog-scrollable">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">enregistrer un achat</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">formulaire d'achat </h5>
-        
-                      <!-- General Form Elements -->
-                      <form method="post" action="">
-                        {% csrf_token %}
-                        
-                        <div class="row mb-3">
-                          <label class="col-sm-3 col-form-label">produit</label>
-                          <div class="col-sm-9">
-                            <select class="form-select" name="produit" aria-label="Default select example">
-                            {% for i in produit %}
-                              {% if i.nomProdui != 'etain' and i.nomProdui != 'casterie' %}
-                              {% comment %}
-                              <option value="{{i.id}}">{{ i.nomProdui}}</option>
-                              {% endcomment %}
-                              {% else %}
-                              <option value="{{i.id}}">{{ i.nomProdui}}</option>
-                              {% endif %}
-                              {% endfor %}
-                            </select>
-                          </div>
+  <div class="contenair">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card ">
+
+          <section class="section dashboard">
+            <h2 class="card alert alert-success align-items-center"> statistiques</h2>
+            <div class="contenair-fluid">
+              <div class="row">
+
+                <!-- Left side columns -->
+                <div class="col-lg-12">
+                  <div class="row align-items-center">
+
+                    <!-- Sales Card -->
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
                         </div>
-                        <div class="row mb-3">
-                          <label class="col-sm-3 col-form-label">fournisseur</label>
-                          <div class="col-sm-9">
-                            <select class="form-select" name="client" aria-label="Default select example">
-                              
-                              {% for i in fournisseur %}
-                              <option value="{{ i.id}}">{{ i.nom_fournisseurs }}</option>
-                              {% endfor %}
-                            </select>
-                          </div>
-                        </div>
-                        <div class="row mb-3">
-                          <label for="inputNumber" class="col-sm-3 col-form-label">quantité/Kg</label>
-                          <div class="col-sm-9">
-                            <input type="text" name="quantite" class="form-control">
-                          </div>
-                        </div>
-                        <div class="row mb-3">
-                          <label for="inputNumber" class="col-sm-4 col-form-label">Prix d'achat</label>
-                          <div class="col-sm-8">
-                            <input type="text" name="prix_achat" class="form-control">
-                          </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="inputNumber" class="col-sm-4 col-form-label">Numero tag</label>
-                            <div class="col-sm-8">
-                              <input type="text" name="tag" class="form-control">
+
+                        <div class="card-body">
+                          <h5 class="card-title">la somme de toute Quantite achater</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+
+                              <h6 id="casterie" class="text-danger">{{ somme_achat }} kg</h6>
+
+
                             </div>
                           </div>
-                        
-                        <div class="row mb-3">
-                          <label class="col-sm-6 col-form-label">Teneur entree</label>
-                          <div class="col-sm-6">
-                            <input type="number" name = "teneur" class="form-control" value="" >
-                          </div>
                         </div>
-        
-                        <div class="row mb-3">
-                          <label class="col-sm-2 col-form-label"></label>
-                          <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Enregistrer</button>
-                          </div>
-                        </div>
-        
-                      </form><!-- End General Form Elements -->
-        
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
-                  
-                </div>
-              </div>
-            </div>
-          </div><!-- End Scrolling Modal-->
+                    <!-- fin card 1 -->
 
-          <div class="card">
-            <div class="card-body ">
-              
-              
-                <div class="col-md-12">
-                  <div class="row">
-                  <div class="col-xxl-3 col-md-6 dashboard">
-                    <div class="card info-card sales-card ">
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                        <div class="card-body">
+                          <h5 class="card-title">la somme de quantité vendue</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+
+                              <h6 id="casterie" class="text-danger">{{ somme_vente }} kg</h6>
+                              
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- fin card 2 -->
+
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                        <div class="card-body">
+                          <h5 class="card-title">la somme de la quantité transformée </h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6 id="casterie" class="text-danger">{{ somme_trans_cast }} kg</h6>
+
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- fin partie 3 -->
+                                        <!-- fin card 2 -->
+
+                                        <div class="col-xxl-3 col-md-6">
+                                          <div class="card info-card sales-card">
+                    
+                                            <div class="filter">
+                                              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                                              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                                <li class="dropdown-header text-start">
+                                                  <h6></h6>
+                                                </li>
+                    
+                                              </ul>
+                                            </div>
+                    
+                                            <div class="card-body">
+                                              <h5 class="card-title">la somme de la quantité commandée </h5>
+                    
+                                              <div class="d-flex align-items-center">
+                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                  <i class="bi bi-cart"></i>
+                                                </div>
+                                                <div class="ps-3">
+                                                  <h6 id="casterie" class="text-danger">{{ s_qt_non_livree }} kg</h6>
+                    
+                    
+                    
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <!-- fin partie 3 -->
+                    
+
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                        <div class="card-body">
+                          <h5 class="card-title">la somme de la quantité livrée</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+
+                              <h6 id="casterie" class="text-danger">{{ somme_livree_cast }} kg</h6>
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                        <div class="card-body">
+                          <h5 class="card-title"> quantité en stock de la casterie</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+
+                              <h6 id="casterie" class="text-danger">{{ stock_casterie  }} kg</h6>
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- fin partie 4 -->
+                  </div>
+          </section>
+          <!-- <section class="section">
+            <div class="row">
+              <div class="col-lg-12">
       
+                <div class="card">
+                  <div class="card-body">
+                    
+                   
+                    <form class="row g-3 align-items-center">
                      
-      
-                      <div class="card-body">
-                        <h5 class="card-title">casterie achater</h5>
-      
-                        <div class="d-flex align-items-center">
-                          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                            <i class="bi bi-cart"></i>
-                          </div>
-                          <div class="ps-3">
-                            
-                            <h6>{{total_quantite}}kg </h6>
-                            
-      
-                          </div>
-                        </div>
+                     
+                     
+                      <div class="col-md-3">
+                        <label for="validationDefault05" class="form-label">g</label>
+                        <input type="text" class="form-control" id="validationDefault05" required>
                       </div>
-      
-                    </div>
-                  </div>
-                  <div class="col-xxl-3 col-md-6 dashboard">
-                    <div class="card info-card sales-card ">
-      
-                    
-      
-                      <div class="card-body">
-                        <h5 class="card-title">casterie vendues</h5>
-      
-                        <div class="d-flex align-items-center">
-                          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                            <i class="bi bi-cart"></i>
-                          </div>
-                          <div class="ps-3">
-                            
-                            <h6> {{summe_casterie_vendus}} kg</h6>
-                            
-      
-                          </div>
-                        </div>
+                      <div class="col-12">
+                        
                       </div>
-      
-                    </div>
-                  </div>
-                  <div class="col-xxl-3 col-md-6 dashboard">
-                    <div class="card info-card sales-card ">
-      
-                 
-      
-                      <div class="card-body">
-                        <h5 class="card-title">casterie transformées</h5>
-      
-                        <div class="d-flex align-items-center">
-                          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                            <i class="bi bi-cart"></i>
-                          </div>
-                          <div class="ps-3">
-                            
-                            <h6>{{summe_casterie_fours}} kg</h6>
-                            
-      
-                          </div>
-                        </div>
+                      <div class="col-12">
+                        <button class="btn btn-primary" type="submit">Submit form</button>
                       </div>
-                    </div>
+                    </form>
+                    End Browser Default Validation -->
+      
                   </div>
-                  <div class="col-xxl-3 col-md-6 dashboard">
-                    <div class="card info-card sales-card ">
-      
-                      
-      
-                      <div class="card-body">
-                        <h5 class="card-title">casterie en stock </h5>
-      
-                        <div class="d-flex align-items-center">
-                          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                            <i class="bi bi-cart"></i>
-                          </div>
-                          <div class="ps-3">
-                            
-                            <h6>{{en_four}} kg</h6>
-                            
-      
-                          </div>
-                        </div>
-                      </div>
-      
-                    </div>
-                  </div>
-                  
-                  <h3 class="title text-danger"> La teneur moyenne est de {{ moyenne_teneurs}} %</h3>
-                  
                 </div>
+      
               </div>
-              
+            </section> 
+            <h2 class="card alert alert-danger"> la moyenne de la casterie est de  {{moyenne_teneur}} %</h2>
+          <section class="section">
+            <div class="row">
+              <div class="col-lg-12">
 
-             
-             
-              
-              <!-- Table with stripped rows -->
-              <div id="pt">
-              <table class="table datatable">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">fournisseur</th>
-                    <th scope="col">produit</th>
-                    <th scope="col">Prix de vente</th>
-                    <th scope="col">quantité</th>
-                    <th scope="col">Prix total</th>
-                    <th scope="col">numero tag</th>
-                    <th scope="col">teneur</th>
-                    <th scope="col">date d'achat</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% for i in entres %}
-                  <tr>
-                    
-                    <th scope="row">{{ i.id }}</th>
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Datatables</h5>
 
-                    <td>{{ i.fournisseurs.nom_fournisseurs }}</td>
-                    <td>{{ i.produits.nomProdui }}</td>
-                    <td id="prixVente">{{i.prix_achat}}</td>
+                    <!-- Table with stripped rows -->
+                    <table class="table datatable ">
+                      <thead>
+                        <tr>
+                          <th scope="col">*</th>
+                          <th scope="col">fournisseurs</th>
+                          <th scope="col">produits</th>
+                          <th scope="col">quantite</th>
+                          <th scope="col">prix_achat</th>
+                          <th scope="col">depense</th>
+                          <th scope="col">montant</th>
+                          <th scope="col">description</th>
+                          <th scope="col">prix_total</th>
+                          <th scope="col">numero_tag</th>
+                          <th scope="col">teneur</th>
+                          <th scope="col">date_achat</th>
+                          <th scope="col">mine</th>
+                        </tr>
+                      </thead>
+                     
+                      <tbody>
+                        {% for all_achat in all_achats %}
+                        <tr>
+                          <th scope="row"><a class="btn btn-secondary text-white" href="{% url 'update_achat' all_achat.id%}">modifer</a></th>
+                          <th scope="row">{{all_achat.fournisseurs.nom_fournisseurs}}</th>
+                          <th scope="row">{{all_achat.produits.nomProdui}}</th>
+                          <th scope="row">{{all_achat.quantite_en_kg}} kg</th>
+                          <th scope="row">{{all_achat.prix_achat_en_dollard}} $</th>
+                          <th scope="row">{{all_achat.depanses.name}} </th>
+                          <th scope="row">{{all_achat.montant_depanses_en_dollard}}</th>
+                          <th scope="row">{{all_achat.descriptions}}</th>
+                          <th scope="row">{{all_achat.prix_total_en_dollard}}</th>
+                          <th scope="row">{{all_achat.numero_tag}}</th>
+                          <th scope="row">{{all_achat.teneur_en_pourcentage}}</th>
+                          <th scope="row">{{all_achat.date_entrer}}</th>
+                          <th scope="row">{{all_achat.source_minier}}</th>
+                          
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                      <thead class="alert-success text-danger text-bold">
+                        <tr>
+                          <th>total</th>
+                          <th></th>
+                          <th></th>
+                          <th>{{all_quantite}} kg</th>
+                          <th>{{all_prices}} $</th>
+                          <th></th>
+                          <th>{{all_amount}} $</th>
+                          <th></th>
+                          <th>{{all_total_prices}} $</th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                    </table>
+                    <!-- End Table with stripped rows -->
 
-                    <td id="quantite">{{i.quantite }}</td>
-                    <td>{{i.prix_total }}</td>
-                    <td>{{ i.numero_tag }}</td>
-                    <td>{{ i.teneur }}</td>
-                    <td>{{ i.date_sortie }}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-                <tbody>
-                  <tr>
-                    <th scope="row">Total general</th>
-                    <td></td>
-                    <td></td>
-                    <td>{{total_prix_vente}}</td>
-                    <td>{{total_quantite}}</td>
-                    <td>{{total_general}}</td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                  
-                </tbody>
-              </table>
+                  </div>
+                </div>
+
+              </div>
             </div>
-              <!-- End Table with stripped rows -->
-      <button onclick="myfun('pt')" class="btn btn-primary mt-3">generer un rapport</button>
-            </div>
-          </div>
+          </section>
 
         </div>
       </div>
-    </section>
-
-
-          </div>
-          <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
-            <section class="section">
-              <div class="row">
-                <div class="col-lg-12">
-                  <p>la quantite en stock est de </p>
-                  <span>
-                       <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">
-                        vendre un produit
-                          
-                      </button>
-                      
-                  </span>
-                  
-                  
-                  <div class="modal fade" id="ExtralargeModal" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-scrollable">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">enregistrer un vente</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <div class="card">
-                            <div class="card-body">
-                              <h5 class="card-title">formulaire de vente </h5>
-                
-                              <!-- General Form Elements -->
-                              <form method="post" action="">
-                                {% csrf_token %}
-                                
-                                <div class="row mb-3">
-                                  <label class="col-sm-3 col-form-label">produit</label>
-                                  <div class="col-sm-9">
-                                    <select class="form-select" name="produit" aria-label="Default select example">
-                                    {% for i in produit %}
-                                      {% if i.nomProdui == 'casterie' or i.nomProdui == 'etain brut' %}
-                                      {% comment %}
-                                      <option value=""></option>
-                                      {% endcomment %}
-                                      {% else %}
-                                      <option value="{{i.id}}">{{ i.nomProdui}}</option>
-                                      {% endif %}
-                                      {% endfor %}
-                                    </select>
-                                  </div>
-                                </div>
-                                <div class="row mb-3">
-                                  <label class="col-sm-3 col-form-label">client</label>
-                                  <div class="col-sm-9">
-                                    <select class="form-select" name="client" aria-label="Default select example">
-                                      
-                                      {% for i in client %}
-                                      <option value="{{ i.id}}">{{ i.nom_clients}}</option>
-                                      {% endfor %}
-                                    </select>
-                                  </div>
-                                </div>
-                                <div class="row mb-3">
-                                  <label for="inputNumber" class="col-sm-3 col-form-label">quantité/Kg</label>
-                                  <div class="col-sm-9">
-                                    <input type="number" name="quantite" class="form-control">
-                                  </div>
-                                </div>
-                                <div class="row mb-3">
-                                  <label for="inputNumber" class="col-sm-4 col-form-label">Prix de vente</label>
-                                  <div class="col-sm-8">
-                                    <input type="number" name="prix_vente" class="form-control">
-                                  </div>
-                                </div>
-                                
-                                <div class="row mb-3">
-                                  <label class="col-sm-6 col-form-label">Teneur Moyenne</label>
-                                  <div class="col-sm-6">
-                                    <input type="number" name = "teneur" class="form-control" value="{{moyenne_teneur_etain}}" disabled>
-                                  </div>
-                                </div>
-                
-                                <div class="row mb-3">
-                                  <label class="col-sm-2 col-form-label"></label>
-                                  <div class="col-sm-10">
-                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                  </div>
-                                </div>
-                
-                              </form><!-- End General Form Elements -->
-                
-                            </div>
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
-                          
-                        </div>
-                      </div>
-                    </div>
-                  </div><!-- End Scrolling Modal-->
-        
-                  <div class="card">
-                    <div class="card-body ">
-                      
-                      
-                        <div class="col-md-12">
-                          <div class="row">
-                          <div class="col-xxl-3 col-md-6 dashboard">
-                            <div class="card info-card sales-card ">
-              
-                              <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
-                                  </li>
-              
-                                  <li><a class="dropdown-item" href="#">Today</a></li>
-                                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                              </div>
-              
-                              <div class="card-body">
-                                <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
-              
-                                <div class="d-flex align-items-center">
-                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-cart"></i>
-                                  </div>
-                                  <div class="ps-3">
-                                    
-                                    <h6>145</h6>
-                                    
-              
-                                  </div>
-                                </div>
-                              </div>
-              
-                            </div>
-                          </div>
-                          <div class="col-xxl-3 col-md-6 dashboard">
-                            <div class="card info-card sales-card ">
-              
-                              <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
-                                  </li>
-              
-                                  <li><a class="dropdown-item" href="#">Today</a></li>
-                                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                              </div>
-              
-                              <div class="card-body">
-                                <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
-              
-                                <div class="d-flex align-items-center">
-                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-cart"></i>
-                                  </div>
-                                  <div class="ps-3">
-                                    
-                                    <h6>145</h6>
-                                    
-              
-                                  </div>
-                                </div>
-                              </div>
-              
-                            </div>
-                          </div>
-                          <div class="col-xxl-3 col-md-6 dashboard">
-                            <div class="card info-card sales-card ">
-              
-                              <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
-                                  </li>
-              
-                                  <li><a class="dropdown-item" href="#">Today</a></li>
-                                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                              </div>
-              
-                              <div class="card-body">
-                                <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
-              
-                                <div class="d-flex align-items-center">
-                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-cart"></i>
-                                  </div>
-                                  <div class="ps-3">
-                                    
-                                    <h6>145</h6>
-                                    
-              
-                                  </div>
-                                </div>
-                              </div>
-              
-                            </div>
-                          </div>
-                          <div class="col-xxl-3 col-md-6 dashboard">
-                            <div class="card info-card sales-card ">
-              
-                              <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
-                                  </li>
-              
-                                  <li><a class="dropdown-item" href="#">Today</a></li>
-                                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                              </div>
-              
-                              <div class="card-body">
-                                <h5 class="card-title">stock casterie<span>| aujourd'hui</span></h5>
-              
-                                <div class="d-flex align-items-center">
-                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-cart"></i>
-                                  </div>
-                                  <div class="ps-3">
-                                    
-                                    <h6>145</h6>
-                                    
-              
-                                  </div>
-                                </div>
-                              </div>
-              
-                            </div>
-                          </div>
-                          
-                        </div>
-                      </div>
-                      
-                      <h5 class="card-title"> </h5>
-                     
-                     
-                      
-                      <!-- Table with stripped rows -->
-                      <div id="pt" class=" ">
-                      <table class="table datatable ">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Clients</th>
-                            <th scope="col">produit</th>
-                            <th scope="col">Prix de vente</th>
-                            <th scope="col">quantité</th>
-                            <th scope="col">Prix total</th>
-                            <th scope="col">teneur</th>
-                            <th scope="col">date sortie</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            {% for i in sortie %}
-                          <tr>
-                            
-                            <th scope="row">{{ i.id }}</th>
-        
-                            <td>{{ i.clients.nom_clients }}</td>
-                            <td>{{ i.produits.nomProdui }}</td>
-                            <td id="prixVente">{{i.prix_vente}}</td>
-        
-                            <td id="quantite">{{i.quantite }}</td>
-                            <td>{{i.prix_total }}</td>
-                            <td>{{ i.teneur }}</td>
-                            <td>{{ i.date_sortie }}</td>
-                          </tr>
-                          {% endfor %}
-                        </tbody>
-                        <tbody>
-                          <tr>
-                            <th scope="row">Total general</th>
-                            <td></td>
-                            <td></td>
-                            <td>{{total_prix_vente}}</td>
-                            <td>{{total_quantite}}</td>
-                            <td>{{total_general}}</td>
-                            <td></td>
-                            <td></td>
-                          </tr>
-                          
-                        </tbody>
-                      </table>
-                    </div>
-                      <!-- End Table with stripped rows -->
-              <button onclick="myfun('pt')" class="btn btn-primary mt-3">generer un rapport</button>
-                    </div>
-                  </div>
-        
-                </div>
-              </div>
-            </section>
-          </div>
-          
-        </div><!-- End Bordered Tabs -->
-
-      </div>
     </div>
+  </div>
+
+</main>
 
 
-
-
-
-
-  </main><!-- End #main -->
-
-<script type="text/javascript">
-    function myfun(pa){
-    var bk = document.body.innerHTML;
-    var dv = document.getElementById(pa).innerHTML;
-        document.body.innerHTML = dv;
-        window.print();
-    }
-
-
-  </script>
-
-
-
-{% endblock  %}
+{% endblock %}

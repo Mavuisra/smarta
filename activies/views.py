@@ -1,19 +1,20 @@
+import codecs
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .models import clients, entrees,sorties, produits, clients, smelting, fourcasterie, refinering, fourrafine,fournisseurs,users
+from .models import *
 from django.db.models import Sum, Avg, Count
-from django.db.models.functions import TruncMonth
+from django.db.models.functions import TruncMonth, TruncYear, TruncWeek, TruncDay
 from django.contrib.auth.forms import UserCreationForm
-from .form import CreationUserForm,usersForm
+from .form import *
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
-from .decorator import unauthenticated_user,allowed_users
-
-
-# Create your views here.
+from .decorator import unauthenticated_user, allowed_users
+import numpy as np
+from.fonctions import myClasses
+import datetime
 
 produit = produits.objects.all().values()
 client = clients.objects.all().values()
@@ -27,27 +28,26 @@ def user_profil(request):
         if form.is_valid():
             form.save()
     context = {
-           'form':form,
+        'form': form,
     }
 
-    
-    return render(request, 'pages/user_profil.html',context)
+    return render(request, 'pages/user_profil.html', context)
 @unauthenticated_user
 def loginpage(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username = username, password = password)
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect('index')
         else:
             messages.info(request, 'information invalides')
     context = {
-        
-    
+
+
     }
-    return render(request, 'pages/login.html',context)
+    return render(request, 'pages/login.html', context)
 
 def createUser(request):
 
@@ -57,522 +57,492 @@ def createUser(request):
         if form.is_valid:
             user = form.save()
             username = form.cleaned_data.get('username')
-            group = Group.objects.get(name = 'user')
+            group = Group.objects.get(name='user')
             user.groups.add(group)
             users.objects.create(
-                user = user,
-                name = users.name
+                user=user,
+                name=users.name
 
             )
 
-            messages.success(request, f"l'utilisateur {username} a ete crée avec succès")
+            messages.success(
+                request, f"l'utilisateur {username} a ete crée avec succès")
             return redirect('login')
         else:
             pass
 
     context = {
-    'form':form, 
-    
+        'form': form,
+
     }
-    return render(request, 'pages/CreateUser.html',context)
+    return render(request, 'pages/CreateUser.html', context)
 
 def logoutpage(request):
     logout(request)
     return redirect('login')
-
+@login_required(login_url='login')
 def facture(request, id):
     gg = sorties.objects.get(id=id)
 
     context = {
         'g': gg,
-    
+
     }
 
-    return render(request, 'pages/facture.html',context)
+    return render(request, 'pages/facture.html', context)
 
-def clientst(request):
-    if request.method  == 'POST':
-        nomClient = request.POST['name']
-        villeClient = request.POST['Telephone']
-        sexeClient = request.POST['Sexe']
-        saveClient = clients(nom_clients = nomClient, sexe = sexeClient, telephone = villeClient)
-        saveClient.save()
-        url = reverse('vente')
-        ret = HttpResponseRedirect(url)
-        return ret
-    else:
-        print('null')
-    return render(request, 'pages/client.html')
-    
-def fournisseurss(request):
-    if request.method  == 'POST':
-        fou = request.POST['name']
-        tel = request.POST['Telephone']
-        sexe = request.POST['Sexe']
-        sf = fournisseurs(nom_fournisseurs = fou, sexe = sexe, telephone =tel )
-        sf.save()
-        url = reverse('achat')
-        ret = HttpResponseRedirect(url)
-        return ret
-    else:
-        print('null')
-    return render(request, 'pages/fournisseur.html')
 
-@login_required(login_url = 'login')
-@allowed_users(allowed_roles = ['admin'])
+@allowed_users(allowed_roles=['admin'])
 def index(request):
+    stock_c = myClasses()
+    moyenne_teneur = stock_c.moyenne_teneur()
+    moyenne_teneur_etain = stock_c.moyenne_teneur_etain()
+    stock_casterie = stock_c.stock_casterie()
+    stasts = stock_c.stats_all()
+    somme_vente = stasts.get("somme_vente")
+    somme_achat = stasts.get("somme_achat")
+    somme_trans_cast = stasts.get("somme_trans_cast")
+    somme_livree_cast =stasts.get("somme_livree_cast") 
+    s_qt_non_livree = stasts.get("s_qt_non_livree")
 
-    moyenne_teneur_etain = refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg']
-    moyenne_teneur_etains = round(moyenne_teneur_etain, 2)
-    summe_casterie_vendu = sorties.objects.all().filter(produits__id = 1)
-    summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
 
-    summe_casterie_transformer = smelting.objects.all().filter(produits__id = 1)
-    summe_casterie_transformers = summe_casterie_transformer.aggregate(Sum('quantite_entrer'))['quantite_entrer__sum']
- 
-    summe_casterie_achater = entrees.objects.all().filter(produits__id = 1)
-    summe_casterie_achaters = summe_casterie_achater.aggregate(Sum('quantite'))['quantite__sum']
-    
-    en_stocks_casterie = summe_casterie_achaters - (summe_casterie_vendus + summe_casterie_transformers)
 
-    summe_etain_transformer = refinering.objects.all().filter(produits__id = 3)
-    summe_etain_transformers = summe_etain_transformer.aggregate(Sum('quantite_sortie'))['quantite_sortie__sum']
-
-    summe_etain_vendu = sorties.objects.all().filter(produits__id = 3)
-    summe_etain_vendus = summe_etain_vendu.aggregate(Sum('quantite'))['quantite__sum']
-    en_stocks_etain= summe_etain_transformers - (summe_etain_vendus)
-
-    revenu_etain = sorties.objects.all().filter(produits__id = 3)
-    revenu_etains = revenu_etain.aggregate(Sum('prix_total'))['prix_total__sum'] 
-    
-
-    revenu_casterie = sorties.objects.all().filter(produits__id = 1)
-    revenu_casteries = revenu_casterie.aggregate(Sum('prix_total'))['prix_total__sum']
-    # rapport = sorties.objects.filter().extra({'month':"Extract(month FROM 	sorties.date_sortie )"} ).values_list('month').annotate(Sum('prix_total'))
-    moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
-    moyenne_teneurs = round(moyenne_teneur, 2)
-    # g = sorties.objects.annotate(month = TruncMonth('date_sortie')).values('month').annotate(rev = Sum('prix_total')).values('rev','month')
-    g = sorties.objects.values('date_sortie__month').annotate(tota = Sum('prix_total')).values('date_sortie__month','tota')
-    print('hello',g)
-     
     context = {
-        'en_stocks':en_stocks_casterie,
-        'en_stocks_etain':en_stocks_etain,
-        'moyenne_teneurs':moyenne_teneurs,
-        'moyenne_teneur_etains':moyenne_teneur_etains,
-        'revenu_etains':revenu_etains,
-        'revenu_casteries':revenu_casteries,
-        
+        'moyenne_teneur_etain':moyenne_teneur_etain,
+        's_qt_non_livree':s_qt_non_livree,
+        'somme_livree_cast':somme_livree_cast,
+        'somme_trans_cast':somme_trans_cast,
+        'somme_achat':somme_achat,
+        'somme_vente':somme_vente,
+        'stock_casterie':stock_casterie,
+        'moyenne_teneur':round(moyenne_teneur),
         
     }
+    return render(request, 'pages/index.html', context)
+
+def Achat(request):
+    stock_c = myClasses()
+    stock_casterie = stock_c.stock_casterie()
+    
+
+    
+    all_sortie = sorties.objects.all().values()
+    all_smelting = transformations.objects.all().values()
+    all_achats = entrees.objects.all().values()
+    all_acha = entrees.objects.all()
+    quantite_list = []
+    teneur_list = []
+    
+    for all_achat in all_achats:
+        quantite = all_achat["quantite_en_kg"]
+        teneur = all_achat["teneur_en_pourcentage"]
+        quantite_list.append(quantite)
+        teneur_list.append(teneur)
+    print(quantite_list)
+    print(teneur_list)
+    somme_quantite_teneur = np.sum(np.multiply(quantite_list ,teneur_list))
+    somme_quantite = np.sum(quantite_list)
+    moyenne_teneur = somme_quantite_teneur / somme_quantite
+    print(moyenne_teneur,stock_casterie)
+    
+    
     
 
 
-    return render(request, 'pages/index.html',context)
-@login_required(login_url = 'login')
-def rafinage(request):
-    moyenne_teneur_etain = refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg']
-    moyenne_teneur_etains = round(moyenne_teneur_etain, 2)
-    fourrafines = fourrafine.objects.all().values()
-    fourcasteries = fourcasterie.objects.all().values()
-    smeltings = smelting.objects.select_related('fourcasterie','produits')
-    rafinage = refinering.objects.select_related('fourrafine','produits')
-    
-    summe_casterie_sortie_four = smelting.objects.all().filter(produits__id = 1)
-    summe_casterie_sortie_fours = summe_casterie_sortie_four.aggregate(Sum('quantite_out'))['quantite_out__sum']
-   
-    etain_entrain = refinering.objects.all().filter(produits__id = 3)
-    etain_entrains = etain_entrain.aggregate(Sum('quantite_entree'))['quantite_entree__sum']
-    etain_sortie = etain_entrain.aggregate(Sum('quantite_sortie'))['quantite_sortie__sum']
-    en_four = summe_casterie_sortie_fours - etain_entrains
+    stasts = stock_c.stats_all()
+    somme_vente = stasts.get("somme_vente")
+    somme_achat = stasts.get("somme_achat")
+    somme_trans_cast = stasts.get("somme_trans_cast")
+    somme_livree_cast =stasts.get("somme_livree_cast") 
+    s_qt_non_livree = stasts.get("s_qt_non_livree")
 
-    if summe_casterie_sortie_fours > etain_entrains:
-        en_four = summe_casterie_sortie_fours - etain_entrains
-        if request.method == 'POST':
-            produitt = request.POST['produit']
-            fourcasteriess = request.POST['Four']
-            produit_id = produits.objects.get(id = int(produitt))
-            fourcasterie_id = fourrafine.objects.get(id = int(fourcasteriess))
-            quantite_in = request.POST['quantite']
-            entrants = request.POST['entrants']
-            if en_four > float(quantite_in):
 
-                fondre = refinering(produits = produit_id, fourrafine = fourcasterie_id, quantite_entree = quantite_in, teneur_sortie = moyenne_teneur_etains, entrants = entrants)
-                fondre.save()
-                url = reverse('rafinage')
-                ret = HttpResponseRedirect(url)
-                return ret 
+
     context = {
-        
-        'moyenne_teneur': moyenne_teneur_etains,
-        'smeltings': smeltings,
-        'fourcasteries': fourcasteries,
-        'produit': produit,
-        'fourrafines':fourrafines,
-        'rafinage':rafinage,
-        'moyenne_teneur_etains':moyenne_teneur_etains,
-        'etain_sortie': en_four,
-        'en_four':en_four,
-        'summe_casterie_sortie_fours':summe_casterie_sortie_fours,
-        'etain_entrains':etain_entrains,
-        'etain_sortie':etain_sortie,
-        
-        
+        's_qt_non_livree':s_qt_non_livree,
+        'somme_livree_cast':somme_livree_cast,
+        'somme_trans_cast':somme_trans_cast,
+        'somme_achat':somme_achat,
+        'somme_vente':somme_vente,
+        'stock_casterie':stock_casterie,
+        'moyenne_teneur':round(moyenne_teneur),
+        'all_achats':all_acha,
+        'all_quantite': all_achats.aggregate(Sum('quantite_en_kg'))['quantite_en_kg__sum'],
+        'all_prices': all_achats.aggregate(Sum('prix_achat_en_dollard'))['prix_achat_en_dollard__sum'],
+        'all_amount': all_achats.aggregate(Sum('montant_depanses_en_dollard'))['montant_depanses_en_dollard__sum'],
+        'all_total_prices': all_achats.aggregate(Sum('prix_total_en_dollard'))['prix_total_en_dollard__sum'],
     }
+    return render(request, 'pages/achat.html', context)
 
-    return render(request, 'pages/rafinage.html',context)
+def add_Achat(request):
+    stock_c = myClasses()
+    stock_casterie = stock_c.stock_casterie()
+    form = AchatForm()
+    all_achats = entrees.objects.all()
 
-@login_required(login_url = 'login')
-def sortie_etain_brut(request, id):
-    gg = smelting.objects.get(id=id)
-    moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
-    moyenne_teneurs = round(moyenne_teneur, 2)
-    context = {
-        'g': gg,
-        'moyenne_teneur': moyenne_teneurs,
-    }
-
-    return render(request, 'pages/sortie_etain_brut.html',context)
-@login_required(login_url = 'login')
-def sortie_etain(request, id):
-    moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
-    moyenne_teneurs = round(moyenne_teneur, 2)
-    g = refinering.objects.get(id=id)
-    
-    context = {
-        'g': g,
-        'moyenne_teneur': moyenne_teneurs,
-        'produit':produit,
-    }
-
-    return render(request, 'pages/sortie_etain.html',context)
-@login_required(login_url = 'login')
-def updaterecord_bru(request, id):
-    
-    quantite_entre = request.POST['quantite_entree']
-
-    quantite_sorti = request.POST['quantite_out']
-    produit_id = produits.objects.get(id = 3)
-    ten_sortie = request.POST['teneur']
-    sortierfou = refinering.objects.get(id=id)
-    
-    if float(quantite_sorti) <=  float(quantite_entre):
-        sortierfou.quantite_entree = float(sortierfou.quantite_entree) - float(quantite_sorti)
-        sortierfou.produits = produit_id
-        sortierfou.teneur_sortie = ten_sortie
-        sortierfou.quantite_sortie += float(quantite_sorti)
-        sortierfou.save()
-
-        url = reverse('rafinage')
-        ret = HttpResponseRedirect(url)
-        return ret
-    else:
-        url = reverse('rafinage')
-        ret = HttpResponseRedirect(url)
-        return ret
-@login_required(login_url = 'login')
-def updaterecord(request, id):
-
-    quantite_sorti = request.POST['quantite_out']
-    quantite_entre = request.POST['quantite']
-    sortierfou = smelting.objects.get(id=id)
-    produit_id = produits.objects.get(id = 4)
-    
-    if float(quantite_sorti) <=  float(quantite_entre):
-        sortierfou.quantite_entrer = float(sortierfou.quantite_entrer) - float(quantite_sorti)
-        sortierfou.produits = produit_id
-        sortierfou.quantite_out += float(quantite_sorti)
-        sortierfou.save()
-        url = reverse('transformation')
-        ret = HttpResponseRedirect(url)
-        return ret
-    else:
-        url = reverse('transformation')
-        ret = HttpResponseRedirect(url)
-        return ret
-@login_required(login_url = 'login')
-def transformation(request):
-    moyenne_teneur_etain = refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg']
-    moyenne_teneur_etains = round(moyenne_teneur_etain, 2)
-    fourrafines = fourrafine.objects.all().values()
-    fourcasteries = fourcasterie.objects.all().values()
-    smeltings = smelting.objects.select_related('fourcasterie','produits')
-    rafinage = refinering.objects.select_related('fourrafine','produits')
-    moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
-    moyenne_teneurs = round(moyenne_teneur, 2)
-    summe_casterie_four = smelting.objects.all().filter(produits__id = 1)
-    summe_casterie_fours = summe_casterie_four.aggregate(Sum('quantite_entrer'))['quantite_entrer__sum']
-    summe_etain_brut_fours = summe_casterie_four.aggregate(Sum('quantite_out'))['quantite_out__sum']
-
-    summe_casterie_achater = entrees.objects.all().filter(produits__id = 1)
-    summe_casterie_achaters = summe_casterie_achater.aggregate(Sum('quantite'))['quantite__sum']
-    
-    summe_casterie_vendu = sorties.objects.all().filter(produits__id = 1)
-    summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
-    en_four = summe_casterie_achaters - summe_casterie_fours
-    if ((summe_casterie_achaters  != None) or ( summe_casterie_vendus != None)) and (summe_casterie_achaters > (summe_casterie_vendus + summe_casterie_fours)):
-
-        en_four = summe_casterie_achaters - (summe_casterie_vendus + summe_casterie_fours)
-        if request.method == 'POST':
-            
-            produitt = request.POST['produit']
-            fourcasteriess = request.POST['Four']
-            produit_id = produits.objects.get(id = int(produitt))
-            fourcasterie_id = fourcasterie.objects.get(id = int(fourcasteriess))
-            quantite_in = request.POST['quantite']
-            entrants = request.POST['entrants']
-            if en_four > float(quantite_in):
-
-                fondre = smelting(produits = produit_id, fourcasterie = fourcasterie_id, quantite_entrer = quantite_in, teneur_entrer = moyenne_teneurs, entrants = entrants)
-                fondre.save()
-                url = reverse('transformation')
-                ret = HttpResponseRedirect(url)
-                return ret 
-    context = {
-        
-        'moyenne_teneur': moyenne_teneurs,
-        'smeltings': smeltings,
-        'fourcasteries': fourcasteries,
-        'produit': produit,
-        'fourrafines':fourrafines,
-        'rafinage':rafinage,
-        'moyenne_teneur_etains':moyenne_teneur_etains,
-        'en_four': en_four,
-        'summe_casterie_fours':summe_casterie_fours,
-        'summe_etain_brut_fours':summe_etain_brut_fours,
-        
-    }
-
-    return render(request, 'pages/transformation.html',context)
-@login_required(login_url = 'login')
-def vente(request):
-    moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
-    moyenne_teneurs = round(moyenne_teneur, 2)
-    summe_casterie_vendu = sorties.objects.all().filter(produits__id = 1)
-    summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
-    total_prix_vente = summe_casterie_vendu.aggregate(Sum('prix_vente'))['prix_vente__sum']
-    prix_total = summe_casterie_vendu.aggregate(Sum('prix_total'))['prix_total__sum']
-
-    summe_casterie_transformer = smelting.objects.all().filter(produits__id = 1)
-    summe_casterie_transformers = summe_casterie_transformer.aggregate(Sum('quantite_entrer'))['quantite_entrer__sum']
-    
-
-    summe_casterie_achater = entrees.objects.all().filter(produits__id = 1)
-    summe_casterie_achaters = summe_casterie_achater.aggregate(Sum('quantite'))['quantite__sum']
-
-    en_stocks = None
-    sangos= None
-    alert = 0
-    
-    
-    if (((summe_casterie_achaters  != None) or ( summe_casterie_vendus != None))) and (summe_casterie_achaters > (summe_casterie_vendus + summe_casterie_transformers)):
-
-        en_stocks = summe_casterie_achaters - (summe_casterie_vendus + summe_casterie_transformers)
-        
-        
-        if request.method == 'POST':
-            
-            produitt = request.POST['produit']
-            clientt = request.POST['client']
-            produit_id = produits.objects.get(id = int(produitt))
-            client_id = clients.objects.get(id = int(clientt))
-            quantite = request.POST['quantite']
-            prix_de_vente = request.POST['prix_vente']
-        
-            
-            if en_stocks > 20:
-                
-                if quantite != '' and prix_de_vente != '':
-                    
-                
-                    if float(quantite) < en_stocks:
-                        pt = float(quantite) * float(prix_de_vente)
-                        vente = sorties(clients = client_id, produits = produit_id, prix_vente = prix_de_vente, quantite = quantite, teneur = moyenne_teneurs,prix_total = pt)
-                        vente.save()
-                        url = reverse('vente')
-                        ret = HttpResponseRedirect(url)
-                        return ret
-                        
-                
-                    else:
-                        sangos = 'la quantité en stock de la  casterie est de {} Kg mais vous voulez vendre {} kg cette operation est impossible!!'.format(en_stocks,quantite)
-                        alert = alert+1
-                else:
-                        sangos = 'remplissez touts les champs'
-                        
-            else:
-                sangos = 'la quantité en stock de la  casterie est de {} Kg cela ne suffit pas pour effectuer la vente !!'.format(en_stocks)
-                alert = alert+1
-    context = {
-        'sortie': summe_casterie_vendu,
-        'produit': produit,
-        'client': client,
-        'moyenne_teneur':round(entrees.objects.aggregate(Avg('teneur'))['teneur__avg'],2),
-        'total_general':summe_casterie_vendus,
-        'total_prix_vente':total_prix_vente,
-        'prix_total':prix_total,
-        'summe_casterie_achaters':summe_casterie_achaters,
-        'en_stocks':en_stocks,
-        'sango':sangos,
-        'summe_casterie_transformers':summe_casterie_transformers,
-        'summe_casterie_vendus':summe_casterie_vendus,
-        'alert':alert,
-
-        
-    }
- 
-    return render(request, 'pages/vente.html',context)
-@login_required(login_url = 'login')
-def achat(request):
-
-   
-    entres = entrees.objects.select_related('fournisseurs','produits')
-    total_general = entrees.objects.aggregate(Sum('prix_total'))['prix_total__sum']
-    total_prix_vente = entrees.objects.aggregate(Sum('prix_achat'))['prix_achat__sum']
-    total_quantite = entrees.objects.aggregate(Sum('quantite'))['quantite__sum']
-    summe_casterie_vendu = entrees.objects.all().filter(produits__id = 1)
-    summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
-
-    summe_casterie_achater = entrees.objects.all().filter(produits__id = 1)
-    summe_casterie_achaters = summe_casterie_achater.aggregate(Sum('quantite'))['quantite__sum']
-    
-    summe_casterie_four = smelting.objects.all().filter(produits__id = 1)
-    summe_casterie_fours = summe_casterie_four.aggregate(Sum('quantite_entrer'))['quantite_entrer__sum']
-
-    summe_casterie_vendu = sorties.objects.all().filter(produits__id = 1)
-    summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
-    moyenne_teneur = entrees.objects.aggregate(Avg('teneur'))['teneur__avg']
-    moyenne_teneurs = round(moyenne_teneur, 2)
-    en_four = summe_casterie_achaters - (summe_casterie_vendus + summe_casterie_fours)
-
-    
-        
-        
     if request.method == 'POST':
-        
-        produitt = request.POST['produit']
-        fourcasteriess = request.POST['client']
-        produit_id = produits.objects.get(id = int(produitt))
-        fourcasteriess_id = fournisseurs.objects.get(id = int(fourcasteriess))
-        quantite = request.POST['quantite']
-        prix_achatq = request.POST['prix_achat']
-        tagss = request.POST['tag']
-        teneur = request.POST['teneur']
-       
-        
-            
-        if quantite != '' and prix_achatq != '':
-            pt = float(quantite) * float(prix_achatq)
+        form = AchatForm(request.POST)
+        quantite = request.POST.get("quantite_en_kg")  
+        if quantite > stock_casterie:
+
+            if form.is_valid:
+                form.save()
+                return redirect('achat')
         else:
-            pass
-
+            messages.error("la quantité en stock est insuffisante")
             
 
-        achatss = entrees( fournisseurs = fourcasteriess_id, produits = produit_id, prix_achat = prix_achatq , quantite = quantite, teneur = teneur ,numero_tag = tagss ,prix_total = pt)
-        achatss.save()
-        url = reverse('achat')
-        ret = HttpResponseRedirect(url)
-        return ret
-           
-            
-       
-      
+    context = {
+        'all_achats':all_achats,
+        'form':form,
+    }
+    return render(request, 'pages/ajout_achat.html', context)
+
+def update_achat(request, id):
+    
+    all_achats = entrees.objects.get(id = id)
+    form = AchatForm(instance=all_achats)
+    if request.method == 'POST':
+        form = AchatForm(request.POST, instance=all_achats)
+        if form.is_valid:
+            form.save()
+            return redirect('achat')
+        
+
+    context = {
+        'all_achats':all_achats,
+        'form':form,
+    }
+    return render(request, 'pages/ajout_achat.html', context)
+    
+def fondrerie(request):
+    stock_c = myClasses()
+    all_fondrerie = transformations.objects.all()
+    stasts = stock_c.stats_all()
+    somme_vente = stasts.get("somme_vente")
+    somme_achat = stasts.get("somme_achat")
+    somme_trans_cast = stasts.get("somme_trans_cast")
+    somme_livree_cast =stasts.get("somme_livree_cast") 
+    s_qt_non_livree = stasts.get("s_qt_non_livree")
+    stock_casterie = stock_c.stock_casterie()
+    moyenne_teneur = stock_c.moyenne_teneur()
+
+    context = {
+        's_qt_non_livree':s_qt_non_livree,
+        'somme_livree_cast':somme_livree_cast,
+        'somme_trans_cast':somme_trans_cast,
+        'somme_achat':somme_achat,
+        'somme_vente':somme_vente,
+        'stock_casterie':stock_casterie,
+        'moyenne_teneur':round(moyenne_teneur),
+        'all_fondrerie':all_fondrerie,
+    }
+    return render(request, 'pages/fondrerie.html', context)
+
+def add_fondre(request):
+    all_fondrerie = transformations.objects.all()
+    all_achats = entrees.objects.all().values()
+    quantite_list = []
+    teneur_list = []
+    
+    for all_achat in all_achats:
+        quantite = all_achat["quantite_en_kg"]
+        teneur = all_achat["teneur_en_pourcentage"]
+        quantite_list.append(quantite)
+        teneur_list.append(teneur)
+    print(quantite_list)
+    print(teneur_list)
+    somme_quantite_teneur = np.sum(np.multiply(quantite_list ,teneur_list))
+    somme_quantite = np.sum(quantite_list)
+    moyenne_teneur = somme_quantite_teneur / somme_quantite
+    print(moyenne_teneur)
+    form = FondrerieForm()
+    if request.method == 'POST':
+        form = FondrerieForm(request.POST)
+        if form.is_valid:
+            form.save()
+            return redirect('fondrerie')
+        
+
+    context = {
+        'moyenne_teneur':moyenne_teneur,
+        'form':form,
+    }
+    return render(request, 'pages/ajouter_four.html', context)
+
+def update_fondre(request, id):
+    all_fondrerie = transformations.objects.get(id = id)
+    form = FondrerieForm(instance=all_fondrerie)
+    if request.method == 'POST':
+        form = FondrerieForm(request.POST, instance=all_fondrerie)
+        if form.is_valid:
+            form.save()
+            return redirect('fondrerie')
+        
+
     context = {
         
-        'produit': produit,
-        'fournisseur': fournisseur,
-        'total_general':total_general,
-        'total_prix_vente':total_prix_vente,
-        'total_quantite':total_quantite,
-        'summe_casterie_vendus':summe_casterie_vendus,
-        'summe_casterie_achaters':summe_casterie_achaters,
-        'en_four':en_four,
-        'entres':entres,
-        'moyenne_teneurs':moyenne_teneurs,
-        'summe_casterie_fours':summe_casterie_fours,
-        
-        
+        'form':form,
     }
-    return render(request, 'pages/achat.html',context)
-@login_required(login_url = 'login')
+    return render(request, 'pages/ajouter_four.html', context)
+
+def rafinage(request):
+    stock_c = myClasses()
+    all_fondrerie = transformations.objects.all()
+    stasts = stock_c.stats_all()
+    stock_etain = stock_c.stock_etain()
+    teneur_etain = stock_c.moyenne_teneur_etain()
+    s_qt_entrer_etain = stasts.get("s_qt_entrer_etain")
+    s_qt_transformer_etain = stasts.get("s_qt_transformer_etain")
+    context = {
+        'teneur_etain':teneur_etain,
+        'stock_etain':stock_etain,
+        's_qt_entrer_etain':s_qt_entrer_etain,
+        's_qt_transformer_etain':s_qt_transformer_etain,
+        'all_fondrerie':all_fondrerie,
+    }
+    return render(request, 'pages/rafinages.html', context)
+
+def update_rafinage(request, id):
+    all_fondrerie = transformations.objects.get(id = id)
+    form = RafinageForm(instance=all_fondrerie)
+    if request.method == 'POST':
+        form = RafinageForm(request.POST, instance=all_fondrerie)
+        if form.is_valid:
+            form.save()
+            return redirect('rafinage')
+        
+
+    context = {
+        'all_fondrerie':all_fondrerie,
+        
+        'form':form,
+    }
+    return render(request, 'pages/ajouter_four.html', context)
+
+def vente(request):
+    stock_c = myClasses()
+    moyenne_teneur = stock_c.moyenne_teneur()
+    stock_casterie = stock_c.stock_casterie()
+    all_ventes = sorties.objects.all().filter(produits_id  = 5)
+    stasts = stock_c.stats_all()
+    somme_vente = stasts.get("somme_vente")
+    somme_achat = stasts.get("somme_achat")
+    somme_trans_cast = stasts.get("somme_trans_cast")
+    somme_livree_cast =stasts.get("somme_livree_cast") 
+    s_qt_non_livree = stasts.get("s_qt_non_livree")
+
+
+
+    context = {
+        'moyenne_teneur':round(moyenne_teneur),
+        's_qt_non_livree':s_qt_non_livree,
+        'somme_livree_cast':somme_livree_cast,
+        'somme_trans_cast':somme_trans_cast,
+        'somme_achat':somme_achat,
+        'somme_vente':somme_vente,
+        'stock_casterie':stock_casterie,
+        'all_quantite': all_ventes.aggregate(Sum('quantite_en_kg'))['quantite_en_kg__sum'],
+        'all_prices': all_ventes.aggregate(Sum('prix_vente_en_dollard'))['prix_vente_en_dollard__sum'],
+        'all_total_prices': all_ventes.aggregate(Sum('prix_total_en_dollard'))['prix_total_en_dollard__sum'],
+        'all_ventes':all_ventes,
+    }
+    return render(request, 'pages/vente.html', context)
+
+def add_vente(request):
+    teneur= myClasses()
+    stock_c = myClasses()
+    stock_casterie_etain = stock_c.stock_casterie()
+    moyenne_teneur = teneur.moyenne_teneur()
+    form = VenteForm()
+    all_ventes = sorties.objects.all().values()
+    
+    if request.method == 'POST':
+        quantite = request.POST.get("quantite_en_kg")
+        form = VenteForm(request.POST)
+        if float(quantite) < stock_casterie_etain:
+            if form.is_valid:
+                form.save()
+                return redirect('vente')
+        else:
+             messages.info(request, 'quantite en stock est insuffisante')
+
+        
+
+    context = {
+        'moyenne_teneur':round(moyenne_teneur,2),
+        'all_achats':all_ventes,
+        'form':form,
+    }
+    return render(request, 'pages/ajout_vente.html', context)
+
+def update_vente(request, id):
+    teneur= myClasses()
+    moyenne_teneur = teneur.moyenne_teneur()
+    all_ventes = sorties.objects.get(id = id)
+    form = VenteForm(instance=all_ventes)
+    if request.method == 'POST':
+        form = VenteForm(request.POST, instance=all_ventes)
+        if form.is_valid:
+            form.save()
+            return redirect('vente')
+        
+
+    context = {
+        'moyenne_teneur':round(moyenne_teneur,2),
+        'all_achats':all_ventes,
+        'form':form,
+    }
+    return render(request, 'pages/ajout_vente.html', context)
+
+
 def vente_etain(request):
+    stock_c = myClasses()
     
-    summe_casterie_vendu = sorties.objects.all().filter(produits__id = 3)
-    summe_casterie_vendus = summe_casterie_vendu.aggregate(Sum('quantite'))['quantite__sum']
-    total_prix_vente = summe_casterie_vendu.aggregate(Sum('prix_vente'))['prix_vente__sum']
-    prix_total = summe_casterie_vendu.aggregate(Sum('prix_total'))['prix_total__sum']
-    df = request.user
-    print(prix_total)
+    stock_etain = stock_c.stock_etain()
+    stasts = stock_c.stats_all()
+    s_qt_non_livree_etain = stasts.get("s_qt_non_livree_etain")
+    s_qt_livree_etain = stasts.get("s_qt_livree_etain")
+    s_qt_vente_vente = stasts.get("s_qt_vente_vente")
+    s_qt_transformer_etain = stasts.get("s_qt_transformer_etain")
+    all_ventes = sorties.objects.all().filter(produits_id = 6)
+    s_qt_non_livree = stasts.get("s_qt_non_livree")
 
 
-    en_stocks = None
-    sangos= None
-    alert = 0
-    summe_etain_transformer = refinering.objects.all().filter(produits__id = 3)
-    summe_etain_transformers = summe_etain_transformer.aggregate(Sum('quantite_sortie'))['quantite_sortie__sum']
 
-    summe_etain_vendu = sorties.objects.all().filter(produits__id = 3)
-    summe_etain_vendus = summe_etain_vendu.aggregate(Sum('quantite'))['quantite__sum']
-    en_stocks_etain= summe_etain_transformers - summe_etain_vendus
-
-    
-    
-    if summe_etain_transformers > summe_etain_vendus:
-
-        en_stocks_etain = summe_etain_transformers - summe_etain_vendus
-        
-        
-        if request.method == 'POST':
-            
-            produitt = request.POST['produit']
-            clientt = request.POST['client']
-            produit_id = produits.objects.get(id = int(produitt))
-            client_id = clients.objects.get(id = int(clientt))
-            user = request.POST['user']
-            user_id = users.objects.get(id = int(user))
-
-            quantite = request.POST['quantite']
-            prix_de_vente = request.POST['prix_vente']
-            
-            
-            if en_stocks_etain > 10:
-                
-                if quantite != None and prix_de_vente != None:
-                    
-                    if float(quantite) < en_stocks_etain:
-                        pt = float(quantite) * float(prix_de_vente)
-                        vente = sorties(user = user_id, clients = client_id, produits = produit_id, prix_vente = prix_de_vente, quantite = quantite, teneur = round(refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg'],2),prix_total = pt)
-                        vente.save()
-                        url = reverse('vente_etain')
-                        ret = HttpResponseRedirect(url)
-                        return ret
-                        
-                
-                    else:
-                        sangos = 'la quantité en stock de l\'etain est de {} Kg cela ne suffit pas pour effectuer une vente !!'.format(en_stocks_etain)
-                        alert = alert+1
-                else:
-                        sangos = 'remplissez touts les champs'
-                        alets =1
-            else:
-                sangos = 'la quantité en stock de la  casterie est de {} Kg cela ne suffit pas pour effectuer la vente !!'.format(en_stocks_etain)
-                alets =1
     context = {
-        'sortie': summe_casterie_vendu,
-        'produit': produit,
-        'client': client,
-        'moyenne_teneur':round(refinering.objects.aggregate(Avg('teneur_sortie'))['teneur_sortie__avg'],2),
-        'total_general':summe_casterie_vendus,
-        'total_prix_vente':total_prix_vente,
-        'prix_total':prix_total,
-        'en_stocks':en_stocks_etain,
-        'sango':sangos,
-        'summe_casterie_vendus':summe_casterie_vendus,
-        'summe_etain_vendus':summe_etain_vendus,
-        'summe_etain_transformers':summe_etain_transformers,
-        'df':df,
-     
-        
+        'stock_etain':stock_etain,
+        's_qt_non_livree':s_qt_non_livree,
+        's_qt_non_livree_etain':s_qt_non_livree_etain,
+        's_qt_livree_etain':s_qt_livree_etain,
+        's_qt_vente_vente':s_qt_vente_vente,
+        's_qt_transformer_etain':s_qt_transformer_etain,
+        'all_quantite': all_ventes.aggregate(Sum('quantite_en_kg'))['quantite_en_kg__sum'],
+        'all_prices': all_ventes.aggregate(Sum('prix_vente_en_dollard'))['prix_vente_en_dollard__sum'],
+        'all_total_prices': all_ventes.aggregate(Sum('prix_total_en_dollard'))['prix_total_en_dollard__sum'],
+        'all_ventes':all_ventes,
     }
+    return render(request, 'pages/vente_etain.html', context) 
+def add_vente_etain(request):
+    teneur= myClasses()
+    stock_c = myClasses()
+    stock_casterie = stock_c.stock_casterie()
+    moyenne_teneur = teneur.moyenne_teneur_etain()
+    form = VenteForm()
+    all_ventes = sorties.objects.all().values().filter(produits_id = 6)
+    
+    if request.method == 'POST':
+        quantite = request.POST.get("quantite_en_kg")
+        form = VenteForm(request.POST)
+        if float(quantite) < stock_casterie:
+            if form.is_valid:
+                form.save()
+                return redirect('vente_etain')
+        else:
+             messages.info(request, 'quantite en stock est insuffisante')
+
+        
+
+    context = {
+        'moyenne_teneur':round(moyenne_teneur,2),
+        'all_achats':all_ventes,
+        'form':form,
+    }
+    return render(request, 'pages/ajout_vente_etain.html', context)
+
+def update_vente_etain(request, id):
+    teneur= myClasses()
+    moyenne_teneur = teneur.moyenne_teneur_etain()
+    all_ventes = sorties.objects.get(id = id)
+    form = VenteForm(instance=all_ventes)
+    if request.method == 'POST':
+        form = VenteForm(request.POST, instance=all_ventes)
+        if form.is_valid:
+            form.save()
+            return redirect('vente_etain')
+        
+
+    context = {
+        'moyenne_teneur':round(moyenne_teneur,2),
+        'all_achats':all_ventes,
+        'form':form,
+    }
+    return render(request, 'pages/ajout_vente_etain.html', context)
+
+def commandes(request):
+    all_commande = commande.objects.all()
+    stock_c = myClasses()
+    moyenne_teneur = stock_c.moyenne_teneur()
+    stock_casterie = stock_c.stock_casterie()
+    all_ventes = sorties.objects.all().filter(produits_id  = 5)
+    stasts = stock_c.stats_all()
+    somme_vente = stasts.get("somme_vente")
+    somme_achat = stasts.get("somme_achat")
+    somme_trans_cast = stasts.get("somme_trans_cast")
+    somme_livree_cast =stasts.get("somme_livree_cast") 
+    s_qt_non_livree = stasts.get("s_qt_non_livree")
+    s_qt_non_livree_etain = stasts.get("s_qt_non_livree_etain")
+    s_qt_livree_etain = stasts.get("s_qt_livree_etain")
+
  
-    return render(request, 'pages/vente_etain.html', context)
+    context = {
+        's_qt_non_livree_etain':s_qt_non_livree_etain,
+        's_qt_livree_etain':s_qt_livree_etain,
+        'moyenne_teneur':round(moyenne_teneur),
+        's_qt_non_livree':s_qt_non_livree,
+        'somme_livree_cast':somme_livree_cast,
+        'somme_trans_cast':somme_trans_cast,
+        'somme_achat':somme_achat,
+        'somme_vente':somme_vente,
+        'stock_casterie':stock_casterie,
+        'all_commande':all_commande,
+    }
+    return render(request, 'pages/commandes.html', context) 
+
+def add_commande(request):
+    stock_c = myClasses()
+    stock_casterie_etain = stock_c.stock_casterie()
+    form = CommandeForm()
+    
+    
+    if request.method == 'POST':
+        quantite = request.POST.get("quantite_en_kg")
+        form = CommandeForm(request.POST)
+        if float(quantite) < stock_casterie_etain:
+            if form.is_valid:
+                form.save()
+                return redirect('commandes')
+        else:
+             messages.info(request, 'quantite en stock est insuffisante')
+
+        
+    context = {
+       'form':form,
+    }
+    return render(request, 'pages/ajout_commande.html', context) 
+def update_commande(request,id):
+    all_commande = commande.objects.get(id = id)
+
+    stock_c = myClasses()
+    stock_casterie_etain = stock_c.stock_casterie()
+    
+    
+    
+    form = CommandeForm(instance=all_commande)
+    if request.method == 'POST':
+        quantite = request.POST.get("quantite")
+        form = CommandeForm(request.POST, instance=all_commande)
+        
+        if float(quantite) < stock_casterie_etain:
+            if form.is_valid:
+                form.save()
+                return redirect('commandes')
+        else:
+                messages.info(request, 'quantite en stock est insuffisante')
+
+    
+    context = {
+        'form':form,
+    }
+    return render(request, 'pages/ajout_commande.html', context) 
+

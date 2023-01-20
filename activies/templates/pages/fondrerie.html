@@ -1,0 +1,345 @@
+{% extends 'pages/base.html' %}
+
+
+{% block index %}
+<main id="main" class="main">
+
+  <div class="pagetitle">
+
+    <h1>fondrerie de la casterie </h1>
+    <nav>
+      <ol class="breadcrumb text-danger ">
+        <li class="breadcrumb-item text-primary"><a href="{% url 'index'%} ">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'vente'%} ">vendre la casterie</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'fondrerie'%} ">transformer la casterie</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'rafinage' %} ">transformer l'etain</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'vente_etain'%} ">vendre l'etain</a></li>
+        <li class="breadcrumb-item"><a class="" href="{% url 'add_Achat'%}">+ acheter</a></li>
+        <li class="breadcrumb-item active">faites la fondrerie ici</li>
+      </ol>
+      <a class=" btn btn-primary" href="{% url 'add_fondre'%}">+ fondre</a>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <div class="contenair">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card ">
+
+          <section class="section dashboard">
+            <h2 class="card alert alert-success align-items-center"> statistiques de la fondrerie</h2>
+            
+            <div class="contenair-fluid">
+              <div class="row">
+
+                <!-- Left side columns -->
+                <div class="col-lg-12">
+                  <div class="row align-items-center">
+
+                    <!-- Sales Card -->
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                        <div class="card-body">
+                          <h5 class="card-title">la somme de toute Quantite achater</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+
+                              <h6 id="casterie" class="text-danger">{{ somme_achat }} kg</h6>
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- fin card 1 -->
+
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                        <div class="card-body">
+                          <h5 class="card-title">la somme de quantité vendue</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+
+                              <h6 id="casterie" class="text-danger">{{ somme_vente }} kg</h6>
+                              
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- fin card 2 -->
+
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                        <div class="card-body">
+                          <h5 class="card-title">la somme de la quantité transformée </h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6 id="casterie" class="text-danger">{{ somme_trans_cast }} kg</h6>
+
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- fin partie 3 -->
+                                        <!-- fin card 2 -->
+
+                                        <div class="col-xxl-3 col-md-6">
+                                          <div class="card info-card sales-card">
+                    
+                                            <div class="filter">
+                                              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                                              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                                <li class="dropdown-header text-start">
+                                                  <h6></h6>
+                                                </li>
+                    
+                                              </ul>
+                                            </div>
+                    
+                                            <div class="card-body">
+                                              <h5 class="card-title">la somme de la quantité commandée </h5>
+                    
+                                              <div class="d-flex align-items-center">
+                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                  <i class="bi bi-cart"></i>
+                                                </div>
+                                                <div class="ps-3">
+                                                  <h6 id="casterie" class="text-danger">{{ s_qt_non_livree }} kg</h6>
+                    
+                    
+                    
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <!-- fin partie 3 -->
+                    
+
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                        <div class="card-body">
+                          <h5 class="card-title">la somme de la quantité livrée</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+
+                              <h6 id="casterie" class="text-danger">{{ somme_livree_cast }} kg</h6>
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                        <div class="card-body">
+                          <h5 class="card-title"> quantité en stock de la casterie</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+
+                              <h6 id="casterie" class="text-danger">{{ stock_casterie  }} kg</h6>
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- fin partie 4 -->
+                  </div>
+          </section>
+          <!-- <section class="section">
+            <div class="row">
+              <div class="col-lg-12">
+      
+                <div class="card">
+                  <div class="card-body">
+                    
+                   
+                    <form class="row g-3 align-items-center">
+                     
+                     
+                     
+                      <div class="col-md-3">
+                        <label for="validationDefault05" class="form-label">g</label>
+                        <input type="text" class="form-control" id="validationDefault05" required>
+                      </div>
+                      <div class="col-12">
+                        
+                      </div>
+                      <div class="col-12">
+                        <button class="btn btn-primary" type="submit">Submit form</button>
+                      </div>
+                    </form>
+                    End Browser Default Validation -->
+      
+                  </div>
+                </div>
+      
+              </div>
+            </section> 
+          <section class="section">
+            <div class="row">
+              <div class="col-lg-12">
+
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Datatables</h5>
+
+                    <!-- Table with stripped rows -->
+                    <table class="table datatable ">
+                      <thead>
+                        <tr>
+                          <th scope="col">*</th>
+                          <th scope="col">four</th>
+                          <th scope="col">produits</th>
+                          <th scope="col">quantite entrées en kg</th>
+                          <th scope="col">quantite sorties en kg</th>
+                          <th scope="col">entrant en kg</th>
+                          <th scope="col">teneur %</th>
+                          <th scope="col">status</th>
+                          <th scope="col">date entrer</th>
+                          <th scope="col">date sortie</th>
+                          
+                        </tr>
+                      </thead>
+                     
+                      <tbody>
+                        {% for all_fondreri in all_fondrerie %}
+                        <tr>
+                          <th scope="row"><a class="btn btn-secondary text-white" href="{% url 'update_fondre' all_fondreri.id %}">modifer</a></th>
+                          <th scope="row">{{all_fondreri.fourcasterie.libelle}}</th>
+                          {% if all_fondreri.produits.nomProdui == 'etain' %}
+                          <th scope="row">casterie</th>
+                          {% else %}
+                          <th scope="row">{{all_fondreri.produits.nomProdui}}</th>
+                          {% endif %}
+                          <th scope="row">{{all_fondreri.quantite_entrer_casterie_en_kg}}</th>
+                          <th scope="row">{{all_fondreri.quantite_sortie_casterie_en_kg}}</th>
+                          <th scope="row">{{all_fondreri.entrant_etain_en_kg}}</th>
+                          <th scope="row">{{all_fondreri.teneur_casterie_en_pourcentage}}</th>
+                          
+                          {% if all_fondreri.quantite_entrer_casterie_en_kg == 0.0 or all_fondreri.quantite_sortie_casterie_en_kg == 0.0 %}
+                          <th scope="row" class="text-danger">en four...</th>
+                      
+                          {% else %}
+                          <th scope="row" class="text-success">sortie</th>
+                          {% endif %}
+                          <th scope="row">{{all_fondreri.date_entrer}}</th>
+                          {% if all_fondreri.quantite_entrer_casterie_en_kg == 0.0 or all_fondreri.quantite_sortie_casterie_en_kg == 0.0 %}
+                          <th scope="row">-----------</th>
+                          {% else %}
+                          <th scope="row">{{all_fondreri.date_sortie}}</th>
+                          {% endif %}
+                          
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                      <thead class="alert-danger">
+                        <tr>
+                          <th>total</th>
+                          
+                        </tr>
+                      </thead>
+                    </table>
+                    <!-- End Table with stripped rows -->
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+
+{% endblock %}

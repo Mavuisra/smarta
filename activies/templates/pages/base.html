@@ -148,9 +148,7 @@
         </nav><!-- End Icons Navigation -->
     
       </header><!-- End Header -->
-{% block index %}
 
-{% endblock  %}
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
@@ -164,37 +162,45 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>Opreation</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-menu-button-wide"></i><span>Menu</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="../vente/">
+            <a href="{% url 'vente' %}"">
               <i class="bi bi-circle"></i><span>Vente casterie</span>
             </a>
           </li>
           
             <li>
-              <a href="../vente_etain/">
+              <a href="">
                 <i class="bi bi-circle"></i><span>Vente etain</span>
               </a>
             </li>
             <li>
-            <a href="../achat/">
+            <a href="{% url 'achat' %}">
               <i class="bi bi-list"></i><span>Achat casterie</span>
             </a>
           </li>
+
           <li>
-            <a href="../transformation/">
+            <a href="">
               <i class="bi bi-circle"></i><span>fondrerie</span>
             </a>
           </li>
           <li>
-            <a href="../rafinage">
+            <a href="{% url 'rafinage' %}">
               <i class="bi bi-circle"></i><span>rafinage</span>
             </a>
           </li>
       
         </li>
+        <li>
+          <a href="">
+            <i class="bi bi-circle"></i><span>commande</span>
+          </a>
+        </li>
+    
+      </li>
         
          <!-- End Blank Page Nav -->
 
@@ -219,6 +225,9 @@
           </ul>
         </li>
   </aside>
+  {% block index %}
+
+{% endblock  %}
   <footer id="footer" class="footer">
     <div class="copyright">
       &copy; Copyright <strong><span>AMM</span></strong>. All Rights Reserved
@@ -246,6 +255,7 @@
 
   <!-- Template Main JS File -->
   <script src="{% static './assets/js/main.js' %}"></script>
+  <script src="{% static './assets/js/jquery-3.0.0.min.js' %}"></script>
 
 </body>
 

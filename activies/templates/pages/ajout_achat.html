@@ -1,0 +1,84 @@
+{% extends 'pages/base.html' %}
+
+
+{% block index %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+
+        <h1>Achat de la casterie </h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index'%} ">Accueil</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'index'%} ">vendre la casterie</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'index'%} ">transformer la casterie</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'achat'%} ">table d'achat</a></li>
+                <li class="breadcrumb-item active">faites l'achat ici</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <div class="contenair">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card ">
+                  <section class="section">
+            <div class="row">
+              <div class="col-lg-12">
+      
+                <div class="card">
+                  <div class="card-body">
+                  <div class="contenair">
+                    <div class="row">
+                      <div class="col-md-3">
+
+                      </div>
+                      <div class="col-md-6 ">
+                        <div class="class">
+                          <p class="alert alert-success text-center ">formulaire de vente</p>
+                        </div>
+                      <form class="row g-3 align-items-center" method="post" action="">
+                     {% csrf_token %}
+                     <div class="col-12 form-control">
+                        {{form.as_p}}
+                        
+                        <button class="btn btn-primary" type="submit">Submit form</button>
+                      </div>
+                    
+                    </form>
+                      </div>
+                      <div class="col-md-3">
+                    
+                      </div>
+                    
+                    </div>
+                  
+                  </div>  
+                   
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</main>
+{% load static %}
+<script type="text/javascript" src="{% static './assets/js/jquery-3.0.0.min.js' %}"></script>
+<script>
+  $(document).ready(function () {
+  $("#id_quantite_en_kg, #id_prix_achat_en_dollard, #id_montant_depanses_en_dollard").keyup(function () {
+   
+    var total = 0.0;
+    var qut = parseFloat(Number($("#id_quantite_en_kg").val()));
+    var prix = parseFloat(Number($("#id_prix_achat_en_dollard").val()));
+    var mont = parseFloat(Number($("#id_montant_depanses_en_dollard").val()));
+    total = qut * prix + mont;
+    $("#id_prix_total_en_dollard").val(parseFloat(total.toFixed(3)));
+  })
+})
+</script>
+
+
+
+{% endblock %}

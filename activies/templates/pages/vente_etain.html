@@ -1,342 +1,307 @@
 {% extends 'pages/base.html' %}
-  <!-- ======= Header ======= -->
 
 
-  <!-- ======= Sidebar ======= -->
-<!-- End Sidebar-->
-
-
-
-  <!-- ======= Footer ======= -->
-  
 {% block index %}
-
-
 <main id="main" class="main">
 
-    <div class="pagetitle">
-      {% if sango == None %}
-      <h1></h1>
-      {% else %}
-      
-      <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
-         <b>alert, {{sango}}</b> 
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-      {% endif %}
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href=" ">alert {{alert}}</a></li>
-          <li class="breadcrumb-item">Tables</li>
-          <li class="breadcrumb-item active">Data</li>
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Bordered Tabs</h5>
+  <div class="pagetitle">
 
-        <!-- Bordered Tabs -->
-        <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-home" type="button" role="tab" aria-controls="home" aria-selected="true">vente de la casterie</button>
-          </li>
-     
-         
-        </ul>
-        <div class="tab-content pt-2" id="borderedTabContent">
-          <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
-            <section class="section">
+    <h1>vente de l'etain </h1>
+    <nav>
+      <ol class="breadcrumb text-danger ">
+        <li class="breadcrumb-item text-primary"><a href="{% url 'index'%} ">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'vente'%} ">vendre la casterie</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'fondrerie'%} ">transformer la casterie</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'rafinage' %} ">transformer l'etain</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'vente_etain'%} ">vendre l'etain</a></li>
+        <li class="breadcrumb-item"><a class="" href="{% url 'add_Achat'%}">+ acheter</a></li>
+        <li class="breadcrumb-item active">faites la vente ici</li>
+      </ol>
+      <a class=" btn btn-primary" href="{% url 'add_vente_etain'%}">+ vendre</a>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <div class="contenair">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card ">
+
+          <section class="section dashboard">
+            <h2 class="card alert alert-success align-items-center"> statistiques</h2>
+            <div class="contenair-fluid">
               <div class="row">
+
+                <!-- Left side columns -->
                 <div class="col-lg-12">
-                  
-                  <span>
-                       <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">
-                        vendre un produit
-                         
-                      </button>
-                      <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#disabledAnimation">
-                       <a href="../ajouterClient">ajouter un client</a> 
-                      </button>
-                  </span>
-                  
-                            
-                            
+                  <div class="row align-items-center">
+
+                    <!-- Sales Card -->
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                        <div class="card-body">
+                          <h5 class="card-title"> quantité de l'etain sortie en four</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+
+                              <h6 id="casterie">{{ s_qt_transformer_etain }} kg</h6>
+
+
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div class="modal fade" id="modalDialogScrollable" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-scrollable">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">enregistrer un vente</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <!-- fin card 1 -->
+
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
                         </div>
-                        <div class="modal-body">
-                          <div class="card">
-                            <div class="card-body">
-                              <h5 class="card-title">formulaire de vente </h5>
-                
-                              <!-- General Form Elements -->
-                              <form method="post" action="">
-                                {% csrf_token %}
-                                
-                                <div class="row mb-3">
-                                  <label class="col-sm-3 col-form-label">produit</label>
-                                  <div class="col-sm-9">
-                                    <select class="form-select" name="produit" aria-label="Default select example">
-                                    {% for i in produit %}
-                                      {% if i.nomProdui != 'etain' and i.nomProdui != 'casterie' %}
-                                      {% comment %}
-                                      <option value="{{i.id}}">{{ i.nomProdui}}</option>
-                                      {% endcomment %}
-                                      {% else %}
-                                      <option value="{{i.id}}">{{ i.nomProdui}}</option>
-                                      {% endif %}
-                                      {% endfor %}
-                                    </select>
-                                  </div>
-                                </div>
-                                <div class="row mb-3">
-                                  <label class="col-sm-3 col-form-label">client</label>
-                                  <div class="col-sm-9">
-                                    <select class="form-select" name="client" aria-label="Default select example">
-                                      
-                                      {% for i in client %}
-                                      <option value="{{ i.id}}">{{ i.nom_clients}}</option>
-                                      {% endfor %}
-                                    </select>
-                                  </div>
-                                </div>
-                                <div class="row mb-3">
-                                  <label for="inputNumber" class="col-sm-3 col-form-label">quantité/Kg</label>
-                                  <div class="col-sm-9">
-                                    <input type="number" name="quantite" class="form-control">
-                                  </div>
-                                </div>
-                                <div class="row mb-3">
-                                  <label for="inputNumber" class="col-sm-4 col-form-label">Prix de vente</label>
-                                  <div class="col-sm-8">
-                                    <input type="number" name="prix_vente" class="form-control">
-                                  </div>
-                                </div>
-                                
-                                <div class="row mb-3">
-                                  <label class="col-sm-6 col-form-label">Teneur Moyenne</label>
-                                  <div class="col-sm-6">
-                                    <input type="number" name = "teneur" class="form-control" value="{{ moyenne_teneur }}" disabled>
-                                  </div>
-                                </div>
-                
-                                <div class="row mb-3">
-                                  <label class="col-sm-2 col-form-label"></label>
-                                  <div class="col-sm-10">
-                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                  </div>
-                                </div>
-                
-                              </form><!-- End General Form Elements -->
-                
+
+                        <div class="card-body">
+                          <h5 class="card-title">quantité de l'etain vendues</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+
+                              <h6 id="casterie">{{ s_qt_vente_vente }} kg</h6>
+
+
                             </div>
                           </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
-                          
                         </div>
                       </div>
                     </div>
-                  </div><!-- End Scrolling Modal-->
-          
-                  <div class="card">
-                    <div class="card-body ">
-                      
-                      
-                        <div class="col-md-12">
-                          <div class="row">
-                          <div class="col-xxl-3 col-md-6 dashboard">
-                            <div class="card info-card sales-card ">
-              
-                             
-              
-                              <div class="card-body">
-                                <h5 class="card-title">etain transformés</h5>
-              
-                                <div class="d-flex align-items-center">
-                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-cart"></i>
-                                  </div>
-                                  <div class="ps-3">
-                                    
-                                    <h6>{{summe_etain_transformers}}kg </h6>
-                                    
-              
-                                  </div>
-                                </div>
-                              </div>
-              
+                    <!-- fin card 2 -->
+
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                        <div class="card-body">
+                          <h5 class="card-title">quantité de l'etain commandé</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
                             </div>
-                          </div>
-                          <div class="col-xxl-3 col-md-6 dashboard">
-                            <div class="card info-card sales-card ">
-              
-                            
-              
-                              <div class="card-body">
-                                <h5 class="card-title">etains vendues</h5>
-              
-                                <div class="d-flex align-items-center">
-                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-cart"></i>
-                                  </div>
-                                  <div class="ps-3">
-                                    
-                                    <h6> {{summe_etain_vendus}} kg</h6>
-                                    
-              
-                                  </div>
-                                </div>
-                              </div>
-              
-                            </div>
-                          </div>
-                          <div class="col-xxl-3 col-md-6 dashboard">
-                            <div class="card info-card sales-card ">
-              
-                         
-              
-                              <div class="card-body">
-                                <h5 class="card-title">etains en stock</h5>
-              
-                                <div class="d-flex align-items-center">
-                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-cart"></i>
-                                  </div>
-                                  <div class="ps-3">
-                                    
-                                    <h6>{{en_stocks}} kg</h6>
-                                    
-              
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-xxl-3 col-md-6 dashboard">
-                            <div class="card info-card sales-card ">
-              
+                            <div class="ps-3">
+
                               
-              
-                              <div class="card-body">
-                                <h5 class="card-title">teneur en etain</h5>
-              
-                                <div class="d-flex align-items-center">
-                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-cart"></i>
-                                  </div>
-                                  <div class="ps-3">
-                                    
-                                    <h6>{{moyenne_teneur}} %</h6>
-                                    
-              
-                                  </div>
-                                </div>
-                              </div>
-              
+                              {% if s_qt_non_livree_etain == None %}
+                              <h6 id="casterie">0.0 kg</h6>
+                              {% else %}
+                              <h6 id="casterie">{{ s_qt_non_livree_etain }} kg</h6>
+                              {% endif %}
+
+
+
                             </div>
                           </div>
-                      
-                          <h3 class="title text-danger"> La teneur moyenne est de {{ moyenne_teneur}} %</h3>
-                     
-                     
-                      
-                      <!-- Table with stripped rows -->
-                      <div id="pt">
-                      <table class="table datatable">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Clients</th>
-                            <th scope="col">produit</th>
-                            <th scope="col">Prix de vente</th>
-                            <th scope="col">quantité</th>
-                            <th scope="col">Prix total</th>
-                            <th scope="col">teneur</th>
-                            <th scope="col">date sortie</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            {% for i in sortie %}
-                          <tr>
-                            
-                            <th scope="row"><a class=" text-danger bold " href="../facture/{{ i.id }}"> {{ i.id }}<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></a></th>
-          
-                            <td>{{ i.clients.nom_clients }}</td>
-                            <td>{{ i.produits.nomProdui }}</td>
-                            <td id="prixVente">{{i.prix_vente}}</td>
-          
-                            <td id="quantite">{{i.quantite }}</td>
-                            <td>{{i.prix_total }}</td>
-                            <td>{{ i.teneur }}</td>
-                            <td>{{ i.date_sortie }}</td>
-                          </tr>
-                          {% endfor %}
-                        </tbody>
-                        <tbody>
-                          <tr>
-                            <th scope="row">Total general</th>
-                            <td></td>
-                            <td></td>
-                            <td>{{total_prix_vente}}</td>
-                            <td>{{total_general}}</td>
-                            <td>{{prix_total}}</td>
-                            <td></td>
-                            <td></td>
-                          </tr>
-                          
-                        </tbody>
-                      </table>
-                      <button onclick="myfun('pt')" class="btn btn-primary mt-3">generer un rapport</button>
+                        </div>
+                      </div>
                     </div>
-                      <!-- End Table with stripped rows -->
-              
+                    <!-- fin partie 3 -->
+
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                        <div class="card-body">
+                          <h5 class="card-title">quantité de l'etain livré</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+
+                              <h6 id="casterie">{{ s_qt_livree_etain }} kg</h6>
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- fin partie 4 -->
+                    
+                    <div class="col-xxl-3 col-md-6">
+                      <div class="card info-card sales-card">
+
+                        <div class="filter">
+                          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                              <h6></h6>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                        <div class="card-body">
+                          <h5 class="card-title">quantité de l'etain en stock </h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-cart"></i>
+                            </div>
+                            <div class="ps-3">
+
+                              <h6 id="casterie">{{ stock_etain }} kg</h6>
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-          
+          </section>
+          <!-- <section class="section">
+            <div class="row">
+              <div class="col-lg-12">
+      
+                <div class="card">
+                  <div class="card-body">
+                    
+                   
+                    <form class="row g-3 align-items-center">
+                     
+                     
+                     
+                      <div class="col-md-3">
+                        <label for="validationDefault05" class="form-label">g</label>
+                        <input type="text" class="form-control" id="validationDefault05" required>
+                      </div>
+                      <div class="col-12">
+                        
+                      </div>
+                      <div class="col-12">
+                        <button class="btn btn-primary" type="submit">Submit form</button>
+                      </div>
+                    </form>
+                    End Browser Default Validation -->
+      
+                  </div>
                 </div>
+      
               </div>
-            </section>
-          
-    
+            </section> 
+          <section class="section">
+            <div class="row">
+              <div class="col-lg-12">
 
-          </div>
-          
-     
-     
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Datatables</h5>
 
+                    <!-- Table with stripped rows -->
+                    <table class="table datatable ">
+                      <thead>
+                        <tr>
+                          <th scope="col">*</th>
+                          <th scope="col">client</th>
+                          <th scope="col">produits</th>
+                          <th scope="col">quantite en kg</th>
+                          <th scope="col">prix de vente $</th>
+                          <th scope="col">teneur</th>
+                          <th scope="col">prix total</th>
+                          <th scope="col">date vendue</th>
+                          
+                        </tr>
+                      </thead>
+                     
+                      <tbody>
+                        {% for all_vente in all_ventes %}
+                        <tr>
+                          <th scope="row"><a class="btn btn-secondary text-white" href="{% url 'update_vente_etain' all_vente.id%}">modifer</a></th>
+                          <th scope="row">{{all_vente.clients.nom_clients}}</th>
+                          <th scope="row">{{all_vente.produits.nomProdui}}</th>
+                          <th scope="row">{{all_vente.quantite_en_kg}}</th>
+                          <th scope="row">{{all_vente.prix_vente_en_dollard}}</th>
+                          <th scope="row">{{all_vente.teneur_en_pourcentage}}</th>
+                          <th scope="row">{{all_vente.prix_total_en_dollard}}</th>
+                          <th scope="row">{{all_vente.date_sortie}}</th>
+                          
+                          
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                      <thead class="alert-success text-danger">
+                        <tr>
+                          <th>total</th>
+                          <th></th>
+                          <th></th>
+                          <th>{{all_quantite}}</th>
+                          <th>{{all_prices}}</th>
+                          <th></th>
+                          <th>{{all_total_prices}}</th>
+                          
+
+                          
+                        </tr>
+                      </thead>
+                    </table>
+                    <!-- End Table with stripped rows -->
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+        </div>
       </div>
     </div>
+  </div>
+
+</main>
 
 
-
-
-
-
-  </main><!-- End #main -->
-
-<script type="text/javascript">
-    function myfun(pa){
-    var bk = document.body.innerHTML;
-    var dv = document.getElementById(pa).innerHTML;
-        document.body.innerHTML = dv;
-        window.print();
-    }
-
-
-  </script>
-
-
-
-{% endblock  %}
+{% endblock %}
