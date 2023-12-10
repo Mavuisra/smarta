@@ -11,7 +11,7 @@ Ce projet Django a pour objectif de développer un système complet de gestion d
 - **Historique des Mouvements:** Enregistre les changements de stock pour une traçabilité complète.
 
 ## Installation
-1. Clonez ce dépôt : `git clone https://github.com/votre-utilisateur/gestion-de-stocks-django.git`
+1. Clonez ce dépôt : `git clone https://github.com/Mavuisra/smartamm.git`
 2. Accédez au répertoire du projet : `cd ammm`
 3. Créez un environnement virtuel : `python -m venv venv`
 4. Activez l'environnement virtuel : 
